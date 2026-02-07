@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeJaClasses – الجدول</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- DaisyUI (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.css" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    /* ==========================
+       STANDARD, LIGHT FONT SYSTEM
+    ========================== */
+    *{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      letter-spacing:-0.005em;
+    }
+    body{
+      background-color: var(--fallback-b1, oklch(var(--b1)));
+      color: var(--fallback-bc, oklch(var(--bc)));
+    }
+
+    /* ==========================
+       DENSITY TOKENS (Compact/Comfortable)
+    ========================== */
+    :root{
+      --pad-page: 24px;
+      --gap-page: 24px;
+      --card-pad: 24px;
+      --card-radius: 14px;
+      --btn-radius: 12px;
+
+      --title-size: 28px;
+      --h3-size: 18px;
+      --body-size: 14px;
+
+      --fw-title: 700;
+      --fw-h3: 600;
+      --fw-body: 500;
+    }
+
+    html[data-density="compact"]{
+      --pad-page: 16px;
+      --gap-page: 16px;
+      --card-pad: 16px;
+      --card-radius: 12px;
+
+      --title-size: 24px;
+      --h3-size: 16px;
+      --body-size: 13px;
+
+      --fw-title: 700;
+      --fw-h3: 600;
+      --fw-body: 500;
+    }
+
+    /* ==========================
+       BACKGROUND GRID (subtle)
+    ========================== */
+    .page-bg{
+      background-image: radial-gradient(
+        circle at 1px 1px,
+        color-mix(in oklab, oklch(var(--b3)) 30%, transparent) 1px,
+        transparent 0
+      );
+      background-size: 18px 18px;
+    }
+
+    /* ==========================
+       CARDS
+    ========================== */
+    .notion-card{
+      background: var(--fallback-b1, oklch(var(--b1)));
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      border-radius: var(--card-radius);
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+    .notion-card:hover{ box-shadow: 0 10px 26px rgba(0,0,0,.08); }
+
+    /* ==========================
+       NAVBAR / FORMS / BUTTONS
+    ========================== */
+    .navbar{
+      background: var(--fallback-b1, oklch(var(--b1)));
+      border-bottom: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      backdrop-filter: blur(10px);
+    }
+
+    .btn{ border-radius: var(--btn-radius); font-weight: 600; }
+    .badge{ border-radius: 999px; font-weight: 600; }
+
+    .select,.input{
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      border-radius: var(--btn-radius);
+      background: var(--fallback-b1, oklch(var(--b1)));
+      font-weight: 600;
+    }
+
+    /* ==========================
+       SIDEBAR
+    ========================== */
+    .sidebar-shell{
+      height:100vh;
+      position:sticky;
+      top:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .sidebar-link{
+      border-radius: var(--btn-radius);
+      padding: 10px 12px;
+      transition: background-color .15s ease, box-shadow .15s ease;
+      font-weight: 600;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .sidebar-link:hover{ background-color: var(--fallback-b2, oklch(var(--b2)/0.7)); }
+    .sidebar-link.active{
+      background-color: var(--fallback-b2, oklch(var(--b2)));
+      box-shadow: inset 0 0 0 1px var(--fallback-b3, oklch(var(--b3)));
+      font-weight: 700;
+    }
+
+    /* Pills (Lang / Density) */
+    .pill{
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      background: color-mix(in oklab, var(--fallback-b2, oklch(var(--b2))) 70%, transparent);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 700;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    /* LTR border polish */
+    html[dir="ltr"] .drawer-side aside{
+      border-left: 0 !important;
+      border-right: 1px solid var(--fallback-b3, oklch(var(--b3))) !important;
+    }
+
+    /* Typography helpers */
+    .t-title{ font-size: var(--title-size); font-weight: var(--fw-title); }
+    .t-h3{ font-size: var(--h3-size); font-weight: var(--fw-h3); }
+    .t-body{ font-size: var(--body-size); font-weight: var(--fw-body); }
+    .t-muted{ color: color-mix(in oklab, oklch(var(--bc)) 55%, transparent); }
+
+    /* Focus ring */
+    :focus-visible{
+      outline: 3px solid color-mix(in oklab, oklch(var(--p)) 35%, transparent);
+      outline-offset: 2px;
+      border-radius: var(--btn-radius);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar{width:10px;height:10px}
+    ::-webkit-scrollbar-track{background: var(--fallback-b2, oklch(var(--b2))); border-radius: 999px}
+    ::-webkit-scrollbar-thumb{background: var(--fallback-b3, oklch(var(--b3))); border-radius: 999px}
+    ::-webkit-scrollbar-thumb:hover{background: var(--fallback-n, oklch(var(--n)))}
+
+    /* Calendar Day Chips */
+    .day-chip{
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      background: color-mix(in oklab, var(--fallback-b2, oklch(var(--b2))) 60%, transparent);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 700;
+      font-size: 12px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space: nowrap;
+    }
+
+    /* Timeline row */
+    .time-col{
+      width: 88px;
+      min-width: 88px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: color-mix(in oklab, oklch(var(--bc)) 60%, transparent);
+    }
+    .slot{
+      border: 1px dashed color-mix(in oklab, oklch(var(--b3)) 70%, transparent);
+      border-radius: 14px;
+      min-height: 54px;
+      padding: 10px 12px;
+      background: color-mix(in oklab, var(--fallback-b1, oklch(var(--b1))) 75%, transparent);
+      transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease;
+    }
+    .slot:hover{
+      box-shadow: 0 10px 20px rgba(0,0,0,.07);
+      transform: translateY(-1px);
+      background: color-mix(in oklab, var(--fallback-b2, oklch(var(--b2))) 65%, transparent);
+    }
+    .event-pill{
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      background: var(--fallback-b1, oklch(var(--b1)));
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .event-dot{
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      margin-top: 5px;
+      flex-shrink: 0;
+      background: oklch(var(--in));
+    }
+    .event-dot.success{ background: oklch(var(--su)); }
+    .event-dot.warning{ background: oklch(var(--wa)); }
+    .event-title{
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 1.2;
+    }
+    .event-meta{
+      font-size: 12px;
+      color: color-mix(in oklab, oklch(var(--bc)) 55%, transparent);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body class="bg-base-100 text-base-content page-bg">
+  <div class="drawer lg:drawer-open">
+    <input id="sidebar-toggle" type="checkbox" class="drawer-toggle" />
+
+    <!-- MAIN -->
+    <div class="drawer-content min-h-screen flex flex-col">
+
+      <!-- NAVBAR -->
+      <div class="navbar px-6 sticky top-0 z-30">
+        <div class="flex items-center gap-3">
+          <label for="sidebar-toggle" class="btn btn-ghost lg:hidden p-2" aria-label="Open menu">
+            <i class="fas fa-bars"></i>
+          </label>
+
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-base-content flex items-center justify-center shadow-sm">
+              <i class="fas fa-graduation-cap text-base-100 text-sm"></i>
+            </div>
+            <div class="leading-tight">
+              <h1 class="text-lg font-semibold">LeJaClasses</h1>
+              <span class="text-xs t-muted hidden md:inline" data-i18n="top.subtitle">لوحة تحكم المشرف</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Density Toggle -->
+          <button id="densityToggle" class="pill" aria-label="Toggle spacing">
+            <i class="fas fa-arrows-alt-v"></i>
+            <span id="densityLabel" data-i18n="density.label">مريح</span>
+          </button>
+
+          <!-- Language Toggle -->
+          <button id="langToggle" class="pill" aria-label="Toggle language">
+            <i class="fas fa-language"></i>
+            <span id="langLabel">EN</span>
+          </button>
+
+          <!-- Theme Toggle -->
+          <button id="themeToggle" class="btn btn-ghost btn-sm p-2" aria-label="Toggle theme">
+            <i class="fas fa-moon text-lg" id="themeIcon"></i>
+          </button>
+
+          <!-- Profile -->
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="flex items-center gap-2 btn btn-ghost px-3 py-2">
+              <div class="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center text-sm font-semibold">
+                م
+              </div>
+              <span class="hidden md:inline text-sm font-semibold" data-i18n="profile.role">المشرف</span>
+              <i class="fas fa-chevron-down text-xs t-muted"></i>
+            </div>
+            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 w-56 bg-base-100 border border-base-300 rounded-2xl shadow">
+              <li class="p-3 border-b border-base-300 rounded-2xl">
+                <div class="font-semibold" data-i18n="profile.role">المشرف</div>
+                <div class="text-sm t-muted">admin@lejaclasses.com</div>
+              </li>
+              <li><a class="rounded-xl"><i class="fas fa-user-cog text-sm"></i> <span data-i18n="profile.settings">إعدادات الملف</span></a></li>
+              <li><a class="rounded-xl"><i class="fas fa-cog text-sm"></i> <span data-i18n="system.settings">إعدادات النظام</span></a></li>
+              <li><a class="rounded-xl"><i class="fas fa-sign-out-alt text-sm"></i> <span data-i18n="logout">تسجيل الخروج</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <main class="max-w-7xl mx-auto w-full" style="padding: var(--pad-page);">
+        <div class="flex flex-col" style="gap: var(--gap-page);">
+
+          <!-- HEADER -->
+          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div>
+              <h2 class="t-title" data-i18n="schedule.title">الجدول</h2>
+              <p class="t-body t-muted mt-1" data-i18n="schedule.subtitle">عرض الأسبوع مع فلاتر سريعة وإضافة جلسة.</p>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <button class="btn btn-primary btn-sm">
+                <i class="fas fa-plus ml-2"></i>
+                <span data-i18n="actions.addSession">إضافة جلسة</span>
+              </button>
+              <button class="btn btn-outline btn-sm border-base-300">
+                <i class="fas fa-print ml-2"></i>
+                <span data-i18n="actions.print">طباعة</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- CONTROLS -->
+          <div class="notion-card p-4">
+            <div class="flex flex-col lg:flex-row gap-3 lg:items-center">
+              <div class="flex items-center gap-2">
+                <button class="btn btn-ghost btn-sm" id="prevWeek" aria-label="Previous week">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <div class="px-3 py-2 rounded-2xl border border-base-300 bg-base-200/50 font-semibold text-sm">
+                  <span id="weekRange" data-i18n="schedule.weekRange">الأسبوع الحالي</span>
+                </div>
+
+                <button class="btn btn-ghost btn-sm" id="nextWeek" aria-label="Next week">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <button class="btn btn-ghost btn-sm" id="todayBtn">
+                  <i class="fas fa-bullseye ml-2"></i>
+                  <span data-i18n="schedule.today">اليوم</span>
+                </button>
+              </div>
+
+              <div class="flex-1"></div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 w-full lg:w-auto">
+                <div class="w-full md:w-56">
+                  <label class="text-xs t-muted font-semibold" data-i18n="filters.teacher">المعلم</label>
+                  <select class="select select-sm w-full mt-1">
+                    <option data-i18n="filters.all">الكل</option>
+                    <option data-i18n="t1">أحمد مصطفى</option>
+                    <option data-i18n="t2">سارة حسن</option>
+                    <option data-i18n="t3">عمر علي</option>
+                  </select>
+                </div>
+
+                <div class="w-full md:w-56">
+                  <label class="text-xs t-muted font-semibold" data-i18n="filters.class">الفصل</label>
+                  <select class="select select-sm w-full mt-1">
+                    <option data-i18n="filters.all">الكل</option>
+                    <option data-i18n="cls.mathA">رياضيات – مستوى A</option>
+                    <option data-i18n="cls.physics">أساسيات الفيزياء</option>
+                    <option data-i18n="cls.chem">مقدمة في الكيمياء</option>
+                  </select>
+                </div>
+
+                <div class="w-full md:w-44">
+                  <label class="text-xs t-muted font-semibold" data-i18n="filters.view">العرض</label>
+                  <select class="select select-sm w-full mt-1">
+                    <option data-i18n="view.week">أسبوع</option>
+                    <option data-i18n="view.day">يوم</option>
+                    <option data-i18n="view.list">قائمة</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+              <span class="day-chip"><i class="fas fa-circle text-xs" style="color: oklch(var(--in));"></i> <span data-i18n="legend.upcoming">قادم</span></span>
+              <span class="day-chip"><i class="fas fa-circle text-xs" style="color: oklch(var(--su));"></i> <span data-i18n="legend.live">جاري</span></span>
+              <span class="day-chip"><i class="fas fa-circle text-xs" style="color: oklch(var(--wa));"></i> <span data-i18n="legend.late">متأخر</span></span>
+            </div>
+          </div>
+
+          <!-- WEEK GRID -->
+          <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+            <!-- LEFT: WEEK LIST -->
+            <div class="notion-card p-4 xl:col-span-1">
+              <div class="flex items-center justify-between mb-3">
+                <div class="t-h3" data-i18n="schedule.weekList">جلسات الأسبوع</div>
+                <span class="badge badge-info" id="weekCount">12</span>
+              </div>
+
+              <div class="space-y-2">
+                <div class="notion-card p-3">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                      <div class="font-semibold text-sm truncate" data-i18n="e1.title">رياضيات – مستوى A</div>
+                      <div class="text-xs t-muted mt-1 font-semibold">
+                        <span data-i18n="e1.meta">الإثنين • 5:00 م • أحمد مصطفى • 12 طالب</span>
+                      </div>
+                    </div>
+                    <span class="badge badge-ghost border border-base-300" data-i18n="legend.upcoming">قادم</span>
+                  </div>
+                </div>
+
+                <div class="notion-card p-3">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                      <div class="font-semibold text-sm truncate" data-i18n="e2.title">أساسيات الفيزياء</div>
+                      <div class="text-xs t-muted mt-1 font-semibold">
+                        <span data-i18n="e2.meta">الثلاثاء • 6:30 م • سارة حسن • 18 طالب</span>
+                      </div>
+                    </div>
+                    <span class="badge badge-success" data-i18n="legend.live">جاري</span>
+                  </div>
+                </div>
+
+                <div class="notion-card p-3">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                      <div class="font-semibold text-sm truncate" data-i18n="e3.title">مقدمة في الكيمياء</div>
+                      <div class="text-xs t-muted mt-1 font-semibold">
+                        <span data-i18n="e3.meta">الأربعاء • 8:00 م • عمر علي • 15 طالب</span>
+                      </div>
+                    </div>
+                    <span class="badge badge-warning" data-i18n="legend.late">متأخر</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-base-300">
+                <button class="btn btn-outline btn-sm w-full border-base-300">
+                  <i class="fas fa-calendar-alt ml-2"></i>
+                  <span data-i18n="schedule.viewAll">عرض كل الجلسات</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- RIGHT: TIMELINE -->
+            <div class="notion-card p-4 xl:col-span-2 overflow-x-auto">
+              <div class="flex items-center justify-between mb-3">
+                <div class="t-h3" data-i18n="schedule.timeline">الخط الزمني (اليوم)</div>
+                <div class="text-sm t-muted font-semibold" id="todayLabel" data-i18n="schedule.todayLabel">السبت</div>
+              </div>
+
+              <div class="min-w-[720px]">
+                <!-- row -->
+                <div class="flex items-start gap-3 py-2">
+                  <div class="time-col">4:00</div>
+                  <div class="flex-1 slot">
+                    <div class="text-xs t-muted font-semibold" data-i18n="schedule.empty">لا توجد جلسة</div>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3 py-2">
+                  <div class="time-col">5:00</div>
+                  <div class="flex-1 slot">
+                    <div class="event-pill">
+                      <span class="event-dot"></span>
+                      <div class="min-w-0">
+                        <div class="event-title truncate" data-i18n="e1.title">رياضيات – مستوى A</div>
+                        <div class="event-meta" data-i18n="e1.timeline">أحمد مصطفى • 12 طالب • قاعة 1</div>
+                        <div class="mt-2 flex flex-wrap gap-2">
+                          <span class="badge badge-ghost border border-base-300 text-xs" data-i18n="legend.upcoming">قادم</span>
+                          <span class="badge badge-ghost border border-base-300 text-xs">ST: 12</span>
+                          <span class="badge badge-ghost border border-base-300 text-xs">60m</span>
+                        </div>
+                      </div>
+                      <div class="mr-auto flex items-center gap-1">
+                        <button class="btn btn-ghost btn-xs" title="View"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-ghost btn-xs" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-ghost btn-xs" title="Start"><i class="fas fa-play"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3 py-2">
+                  <div class="time-col">6:30</div>
+                  <div class="flex-1 slot">
+                    <div class="event-pill">
+                      <span class="event-dot success"></span>
+                      <div class="min-w-0">
+                        <div class="event-title truncate" data-i18n="e2.title">أساسيات الفيزياء</div>
+                        <div class="event-meta" data-i18n="e2.timeline">سارة حسن • 18 طالب • قاعة 2</div>
+                        <div class="mt-2 flex flex-wrap gap-2">
+                          <span class="badge badge-success text-xs" data-i18n="legend.live">جاري</span>
+                          <span class="badge badge-ghost border border-base-300 text-xs">ST: 18</span>
+                          <span class="badge badge-ghost border border-base-300 text-xs">90m</span>
+                        </div>
+                      </div>
+                      <div class="mr-auto flex items-center gap-1">
+                        <button class="btn btn-ghost btn-xs" title="View"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-ghost btn-xs" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-ghost btn-xs" title="End"><i class="fas fa-stop"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-3 py-2">
+                  <div class="time-col">8:00</div>
+                  <div class="flex-1 slot">
+                    <div class="event-pill">
+                      <span class="event-dot warning"></span>
+                      <div class="min-w-0">
+                        <div class="event-title truncate" data-i18n="e3.title">مقدمة في الكيمياء</div>
+                        <div class="event-meta" data-i18n="e3.timeline">عمر علي • 15 طالب • قاعة 3</div>
+                        <div class="mt-2 flex flex-wrap gap-2">
+                          <span class="badge badge-warning text-xs" data-i18n="legend.late">متأخر</span>
+                          <span class="badge badge-ghost border border-base-300 text-xs">ST: 15</span>
+                          <span class="badge badge-ghost border border-base-300 text-xs">60m</span>
+                        </div>
+                      </div>
+                      <div class="mr-auto flex items-center gap-1">
+                        <button class="btn btn-ghost btn-xs" title="View"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-ghost btn-xs" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-ghost btn-xs" title="Notify"><i class="fas fa-bell"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="mt-auto p-6 border-t border-base-300">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <p class="text-sm t-muted" data-i18n="footer.copy">© 2026 LeJaClasses. جميع الحقوق محفوظة.</p>
+          <div class="flex items-center gap-4 text-sm t-muted">
+            <a href="#" class="hover:text-base-content transition-colors" data-i18n="footer.help">المساعدة</a>
+            <a href="#" class="hover:text-base-content transition-colors" data-i18n="footer.terms">الشروط</a>
+            <a href="#" class="hover:text-base-content transition-colors" data-i18n="footer.privacy">الخصوصية</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="drawer-side">
+      <label for="sidebar-toggle" class="drawer-overlay"></label>
+
+      <aside class="w-80 bg-base-100 text-base-content border-l border-base-300">
+        <div class="sidebar-shell p-6 gap-6">
+
+          <div class="flex items-center gap-3 pb-6 border-b border-base-300">
+            <div class="w-12 h-12 rounded-2xl bg-base-content flex items-center justify-center shadow-sm">
+              <i class="fas fa-graduation-cap text-base-100"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-semibold">LeJaClasses</h2>
+              <p class="text-xs t-muted" data-i18n="sidebar.adminSubtitle">لوحة التحكم الإدارية</p>
+            </div>
+          </div>
+
+          <nav class="space-y-1 overflow-y-auto pr-1">
+            <a href="admin-dashboard.html" class="sidebar-link">
+              <i class="fas fa-tachometer-alt text-sm w-5"></i>
+              <span data-i18n="nav.dashboard">لوحة التحكم</span>
+            </a>
+
+            <a href="admin-classes.html" class="sidebar-link">
+              <i class="fas fa-chalkboard-teacher text-sm w-5"></i>
+              <span data-i18n="nav.classes">الفصول</span>
+            </a>
+
+            <a href="admin-teachers.html" class="sidebar-link">
+              <i class="fas fa-user-tie text-sm w-5"></i>
+              <span data-i18n="nav.teachers">المعلمون</span>
+              <span class="badge badge-info text-xs mr-auto">8</span>
+            </a>
+
+            <a href="admin-students.html" class="sidebar-link">
+              <i class="fas fa-user-graduate text-sm w-5"></i>
+              <span data-i18n="nav.students">الطلاب</span>
+              <span class="badge badge-success text-xs mr-auto">154</span>
+            </a>
+
+            <a href="admin-schedule.html" class="sidebar-link active">
+              <i class="fas fa-calendar-alt text-sm w-5"></i>
+              <span data-i18n="nav.schedule">الجدول</span>
+              <span class="mr-auto text-xs t-muted font-semibold">●</span>
+            </a>
+
+            <a href="admin-reports.html" class="sidebar-link">
+              <i class="fas fa-chart-bar text-sm w-5"></i>
+              <span data-i18n="nav.reports">التقارير</span>
+            </a>
+
+            <a href="admin-finance.html" class="sidebar-link">
+              <i class="fas fa-dollar-sign text-sm w-5"></i>
+              <span data-i18n="nav.finance">المالية</span>
+            </a>
+
+            <div class="border-t border-base-300 pt-5 mt-5">
+              <p class="text-xs t-muted mb-3 font-semibold" data-i18n="sidebar.other">عروض أخرى</p>
+              <div class="space-y-1">
+                <a href="teacher-dashboard.html" class="sidebar-link">
+                  <i class="fas fa-external-link-alt text-sm w-5"></i>
+                  <span data-i18n="nav.teacherUI">واجهة المعلم</span>
+                </a>
+                <a href="parent-dashboard.html" class="sidebar-link">
+                  <i class="fas fa-external-link-alt text-sm w-5"></i>
+                  <span data-i18n="nav.parentUI">واجهة ولي الأمر</span>
+                </a>
+              </div>
+            </div>
+          </nav>
+
+          <div class="mt-auto pt-6 border-t border-base-300">
+            <div class="bg-base-200/70 border border-base-300 p-4 rounded-2xl">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-12 h-12 rounded-2xl bg-info/10 flex items-center justify-center">
+                  <i class="fas fa-question-circle text-info"></i>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-sm" data-i18n="help.title">تحتاج مساعدة؟</h4>
+                  <p class="text-xs t-muted" data-i18n="help.sidebar">فريق الدعم متاح 24/7</p>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm w-full">
+                <i class="fas fa-headset ml-2"></i>
+                <span data-i18n="help.cta">الدعم الفني</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // ===== Theme =====
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const root = document.documentElement;
+
+    function setTheme(theme) {
+      root.setAttribute("data-theme", theme);
+      localStorage.setItem("leja_theme", theme);
+      updateThemeIcon();
+    }
+
+    function updateThemeIcon() {
+      const now = root.getAttribute("data-theme");
+      themeIcon.className = now === "light" ? "fas fa-moon text-lg" : "fas fa-sun text-lg";
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem("leja_theme");
+      if (saved === "light" || saved === "dark") {
+        root.setAttribute("data-theme", saved);
+      } else {
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        root.setAttribute("data-theme", prefersDark ? "dark" : "light");
+      }
+      updateThemeIcon();
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const now = root.getAttribute("data-theme");
+      setTheme(now === "light" ? "dark" : "light");
+    });
+
+    // ===== Density =====
+    const densityToggle = document.getElementById("densityToggle");
+    const densityLabel = document.getElementById("densityLabel");
+
+    function setDensity(d) {
+      root.setAttribute("data-density", d);
+      localStorage.setItem("leja_density", d);
+
+      const lang = root.getAttribute("lang") === "en" ? "en" : "ar";
+      if (lang === "en") densityLabel.textContent = d === "comfortable" ? "Comfortable" : "Compact";
+      else densityLabel.textContent = d === "comfortable" ? "مريح" : "مضغوط";
+    }
+
+    function initDensity() {
+      const saved = localStorage.getItem("leja_density");
+      setDensity(saved === "compact" ? "compact" : "comfortable");
+    }
+
+    densityToggle.addEventListener("click", () => {
+      const now = root.getAttribute("data-density");
+      setDensity(now === "comfortable" ? "compact" : "comfortable");
+    });
+
+    // ===== I18N =====
+    const langToggle = document.getElementById("langToggle");
+    const langLabel = document.getElementById("langLabel");
+
+    const dict = {
+      ar: {
+        "top.subtitle":"لوحة تحكم المشرف",
+        "profile.role":"المشرف",
+        "profile.settings":"إعدادات الملف",
+        "system.settings":"إعدادات النظام",
+        "logout":"تسجيل الخروج",
+
+        "schedule.title":"الجدول",
+        "schedule.subtitle":"عرض الأسبوع مع فلاتر سريعة وإضافة جلسة.",
+        "schedule.weekRange":"الأسبوع الحالي",
+        "schedule.today":"اليوم",
+        "schedule.weekList":"جلسات الأسبوع",
+        "schedule.timeline":"الخط الزمني (اليوم)",
+        "schedule.todayLabel":"اليوم",
+        "schedule.empty":"لا توجد جلسة",
+        "schedule.viewAll":"عرض كل الجلسات",
+
+        "actions.addSession":"إضافة جلسة",
+        "actions.print":"طباعة",
+
+        "filters.teacher":"المعلم",
+        "filters.class":"الفصل",
+        "filters.view":"العرض",
+        "filters.all":"الكل",
+
+        "view.week":"أسبوع",
+        "view.day":"يوم",
+        "view.list":"قائمة",
+
+        "legend.upcoming":"قادم",
+        "legend.live":"جاري",
+        "legend.late":"متأخر",
+
+        "cls.mathA":"رياضيات – مستوى A",
+        "cls.physics":"أساسيات الفيزياء",
+        "cls.chem":"مقدمة في الكيمياء",
+
+        "t1":"أحمد مصطفى",
+        "t2":"سارة حسن",
+        "t3":"عمر علي",
+
+        "e1.title":"رياضيات – مستوى A",
+        "e1.meta":"الإثنين • 5:00 م • أحمد مصطفى • 12 طالب",
+        "e1.timeline":"أحمد مصطفى • 12 طالب • قاعة 1",
+
+        "e2.title":"أساسيات الفيزياء",
+        "e2.meta":"الثلاثاء • 6:30 م • سارة حسن • 18 طالب",
+        "e2.timeline":"سارة حسن • 18 طالب • قاعة 2",
+
+        "e3.title":"مقدمة في الكيمياء",
+        "e3.meta":"الأربعاء • 8:00 م • عمر علي • 15 طالب",
+        "e3.timeline":"عمر علي • 15 طالب • قاعة 3",
+
+        "footer.copy":"© 2026 LeJaClasses. جميع الحقوق محفوظة.",
+        "footer.help":"المساعدة",
+        "footer.terms":"الشروط",
+        "footer.privacy":"الخصوصية",
+
+        "sidebar.adminSubtitle":"لوحة التحكم الإدارية",
+        "sidebar.other":"عروض أخرى",
+        "help.title":"تحتاج مساعدة؟",
+        "help.sidebar":"فريق الدعم متاح 24/7",
+        "help.cta":"الدعم الفني",
+
+        "nav.dashboard":"لوحة التحكم",
+        "nav.classes":"الفصول",
+        "nav.teachers":"المعلمون",
+        "nav.students":"الطلاب",
+        "nav.schedule":"الجدول",
+        "nav.reports":"التقارير",
+        "nav.finance":"المالية",
+        "nav.teacherUI":"واجهة المعلم",
+        "nav.parentUI":"واجهة ولي الأمر",
+
+        "density.label":"مريح"
+      },
+      en: {
+        "top.subtitle":"Admin Dashboard",
+        "profile.role":"Admin",
+        "profile.settings":"Profile settings",
+        "system.settings":"System settings",
+        "logout":"Sign out",
+
+        "schedule.title":"Schedule",
+        "schedule.subtitle":"Weekly view with quick filters and add session.",
+        "schedule.weekRange":"Current week",
+        "schedule.today":"Today",
+        "schedule.weekList":"Week sessions",
+        "schedule.timeline":"Timeline (Today)",
+        "schedule.todayLabel":"Today",
+        "schedule.empty":"No session",
+        "schedule.viewAll":"View all sessions",
+
+        "actions.addSession":"Add session",
+        "actions.print":"Print",
+
+        "filters.teacher":"Teacher",
+        "filters.class":"Class",
+        "filters.view":"View",
+        "filters.all":"All",
+
+        "view.week":"Week",
+        "view.day":"Day",
+        "view.list":"List",
+
+        "legend.upcoming":"Upcoming",
+        "legend.live":"Live",
+        "legend.late":"Late",
+
+        "cls.mathA":"Math — Level A",
+        "cls.physics":"Physics basics",
+        "cls.chem":"Intro to chemistry",
+
+        "t1":"Ahmed Mostafa",
+        "t2":"Sara Hassan",
+        "t3":"Omar Ali",
+
+        "e1.title":"Math — Level A",
+        "e1.meta":"Mon • 5:00 PM • Ahmed • 12 students",
+        "e1.timeline":"Ahmed • 12 students • Room 1",
+
+        "e2.title":"Physics basics",
+        "e2.meta":"Tue • 6:30 PM • Sara • 18 students",
+        "e2.timeline":"Sara • 18 students • Room 2",
+
+        "e3.title":"Intro to chemistry",
+        "e3.meta":"Wed • 8:00 PM • Omar • 15 students",
+        "e3.timeline":"Omar • 15 students • Room 3",
+
+        "footer.copy":"© 2026 LeJaClasses. All rights reserved.",
+        "footer.help":"Help",
+        "footer.terms":"Terms",
+        "footer.privacy":"Privacy",
+
+        "sidebar.adminSubtitle":"Admin Console",
+        "sidebar.other":"Other views",
+        "help.title":"Need help?",
+        "help.sidebar":"Support available 24/7",
+        "help.cta":"Support",
+
+        "nav.dashboard":"Dashboard",
+        "nav.classes":"Classes",
+        "nav.teachers":"Teachers",
+        "nav.students":"Students",
+        "nav.schedule":"Schedule",
+        "nav.reports":"Reports",
+        "nav.finance":"Finance",
+        "nav.teacherUI":"Teacher UI",
+        "nav.parentUI":"Parent UI",
+
+        "density.label":"Comfortable"
+      }
+    };
+
+    function applyI18n(lang){
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        const val = dict[lang][key];
+        if (val) el.textContent = val;
+      });
+    }
+
+    function setLanguage(lang){
+      const isEN = lang === "en";
+      root.setAttribute("lang", isEN ? "en" : "ar");
+      root.setAttribute("dir", isEN ? "ltr" : "rtl");
+      localStorage.setItem("leja_lang", lang);
+      langLabel.textContent = isEN ? "AR" : "EN";
+
+      applyI18n(lang);
+
+      // sync density label with language
+      const d = root.getAttribute("data-density") || "comfortable";
+      setDensity(d);
+    }
+
+    function initLanguage(){
+      const saved = localStorage.getItem("leja_lang");
+      setLanguage(saved === "en" ? "en" : "ar");
+    }
+
+    langToggle.addEventListener("click", () => {
+      const current = root.getAttribute("lang") === "en" ? "en" : "ar";
+      setLanguage(current === "en" ? "ar" : "en");
+    });
+
+    // ===== Week label (prototype-only, no real date math) =====
+    const weekRangeEl = document.getElementById("weekRange");
+    const todayLabelEl = document.getElementById("todayLabel");
+    const todayBtn = document.getElementById("todayBtn");
+    const prevWeek = document.getElementById("prevWeek");
+    const nextWeek = document.getElementById("nextWeek");
+
+    let weekIndex = 0;
+
+    function setWeekLabel(){
+      const lang = root.getAttribute("lang") === "en" ? "en" : "ar";
+      if (weekRangeEl){
+        if (lang === "en"){
+          weekRangeEl.textContent = weekIndex === 0 ? "Current week" : (weekIndex > 0 ? `Week +${weekIndex}` : `Week ${weekIndex}`);
+        } else {
+          weekRangeEl.textContent = weekIndex === 0 ? "الأسبوع الحالي" : (weekIndex > 0 ? `الأسبوع +${weekIndex}` : `الأسبوع ${weekIndex}`);
+        }
+      }
+      if (todayLabelEl){
+        const now = new Date();
+        const daysAR = ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+        const daysEN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        todayLabelEl.textContent = (lang === "en") ? daysEN[now.getDay()] : daysAR[now.getDay()];
+      }
+    }
+
+    prevWeek?.addEventListener("click", () => { weekIndex--; setWeekLabel(); });
+    nextWeek?.addEventListener("click", () => { weekIndex++; setWeekLabel(); });
+    todayBtn?.addEventListener("click", () => { weekIndex = 0; setWeekLabel(); });
+
+    // ===== Init =====
+    document.addEventListener("DOMContentLoaded", () => {
+      initTheme();
+      initDensity();
+      initLanguage();
+      setWeekLabel();
+    });
+  </script>
+</body>
+</html>

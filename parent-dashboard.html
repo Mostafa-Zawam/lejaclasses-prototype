@@ -1,0 +1,825 @@
+<!-- File: parent-dashboard.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeJaClasses – واجهة ولي الأمر</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.css" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    *{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;letter-spacing:-0.005em}
+    body{background-color:var(--fallback-b1,oklch(var(--b1)));color:var(--fallback-bc,oklch(var(--bc)))}
+
+    :root{
+      --pad-page:24px; --gap-page:24px; --card-pad:24px; --card-radius:14px; --btn-radius:12px;
+      --title-size:28px; --h3-size:18px; --body-size:14px;
+      --fw-title:700; --fw-h3:600; --fw-body:500;
+    }
+    html[data-density="compact"]{
+      --pad-page:16px; --gap-page:16px; --card-pad:16px; --card-radius:12px;
+      --title-size:24px; --h3-size:16px; --body-size:13px;
+    }
+
+    .page-bg{
+      background-image:radial-gradient(circle at 1px 1px, color-mix(in oklab, oklch(var(--b3)) 30%, transparent) 1px, transparent 0);
+      background-size:18px 18px;
+    }
+
+    .notion-card{
+      background:var(--fallback-b1,oklch(var(--b1)));
+      border:1px solid var(--fallback-b3,oklch(var(--b3)));
+      border-radius:var(--card-radius);
+      box-shadow:0 1px 3px rgba(0,0,0,.06);
+      transition:transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+    .notion-card:hover{box-shadow:0 10px 26px rgba(0,0,0,.08)}
+    .stat-card{
+      background:var(--fallback-b1,oklch(var(--b1)));
+      border:1px solid var(--fallback-b3,oklch(var(--b3)));
+      border-radius:var(--card-radius);
+      transition:transform .2s ease, box-shadow .2s ease;
+      position:relative; overflow:hidden;
+    }
+    .stat-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.10)}
+
+    .navbar{
+      background:var(--fallback-b1,oklch(var(--b1)));
+      border-bottom:1px solid var(--fallback-b3,oklch(var(--b3)));
+      backdrop-filter:blur(10px);
+    }
+
+    .btn{border-radius:var(--btn-radius);font-weight:600}
+    .badge{border-radius:999px;font-weight:600}
+    .select,.input{
+      border:1px solid var(--fallback-b3,oklch(var(--b3)));
+      border-radius:var(--btn-radius);
+      background:var(--fallback-b1,oklch(var(--b1)));
+      font-weight:600;
+    }
+
+    .pill{
+      border:1px solid var(--fallback-b3,oklch(var(--b3)));
+      background:color-mix(in oklab, var(--fallback-b2,oklch(var(--b2))) 70%, transparent);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:700;
+      display:flex; align-items:center; gap:8px;
+    }
+
+    .t-title{font-size:var(--title-size);font-weight:var(--fw-title)}
+    .t-h3{font-size:var(--h3-size);font-weight:var(--fw-h3)}
+    .t-body{font-size:var(--body-size);font-weight:var(--fw-body)}
+    .t-muted{color:color-mix(in oklab, oklch(var(--bc)) 55%, transparent)}
+
+    :focus-visible{
+      outline:3px solid color-mix(in oklab, oklch(var(--p)) 35%, transparent);
+      outline-offset:2px;
+      border-radius:var(--btn-radius);
+    }
+
+    ::-webkit-scrollbar{width:10px;height:10px}
+    ::-webkit-scrollbar-track{background:var(--fallback-b2,oklch(var(--b2)));border-radius:999px}
+    ::-webkit-scrollbar-thumb{background:var(--fallback-b3,oklch(var(--b3)));border-radius:999px}
+    ::-webkit-scrollbar-thumb:hover{background:var(--fallback-n,oklch(var(--n)))}
+
+    .table{border-collapse:separate;border-spacing:0}
+    .table th{
+      font-weight:700;font-size:12px;
+      color:color-mix(in oklab, oklch(var(--bc)) 65%, transparent);
+      border-bottom:1px solid var(--fallback-b3,oklch(var(--b3)));
+      padding:12px 14px;
+      background:color-mix(in oklab, var(--fallback-b2,oklch(var(--b2))) 55%, transparent);
+    }
+    .table td{
+      padding:12px 14px;
+      border-bottom:1px solid var(--fallback-b3,oklch(var(--b3)));
+      font-weight:600;font-size:13px;
+    }
+    .row-hover:hover td{background:color-mix(in oklab, var(--fallback-b2,oklch(var(--b2))) 60%, transparent)}
+
+    html[dir="ltr"] .table th, html[dir="ltr"] .table td{text-align:left}
+  </style>
+</head>
+
+<body class="bg-base-100 text-base-content page-bg">
+  <div class="min-h-screen flex flex-col">
+
+    <!-- NAVBAR (DaisyUI structure) -->
+    <div class="navbar px-4 md:px-6 sticky top-0 z-30">
+      <div class="navbar-start gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-base-content flex items-center justify-center shadow-sm">
+          <i class="fas fa-graduation-cap text-base-100 text-sm"></i>
+        </div>
+        <div class="leading-tight">
+          <h1 class="text-lg font-semibold">LeJaClasses</h1>
+          <span class="text-xs t-muted hidden md:inline" data-i18n="top.subtitle">واجهة ولي الأمر</span>
+        </div>
+      </div>
+
+      <div class="navbar-end gap-2">
+        <!-- Student dropdown -->
+        <div class="dropdown dropdown-end">
+          <button id="studentBtn" tabindex="0" type="button" class="pill" aria-haspopup="menu" aria-expanded="false">
+            <i class="fas fa-user-graduate"></i>
+            <span id="studentName" class="font-semibold" data-i18n="student.name">ليـن</span>
+            <i class="fas fa-chevron-down text-xs t-muted"></i>
+          </button>
+          <ul tabindex="0" class="dropdown-content z-[1] menu p-2 w-56 bg-base-100 border border-base-300 rounded-2xl shadow">
+            <li><button type="button" class="rounded-xl" data-student="leen"><i class="fas fa-child"></i> <span data-i18n="student.leen">ليـن</span></button></li>
+            <li><button type="button" class="rounded-xl" data-student="omar"><i class="fas fa-child"></i> <span data-i18n="student.omar">عمر</span></button></li>
+          </ul>
+        </div>
+
+        <!-- Density -->
+        <button id="densityToggle" type="button" class="pill" aria-label="Toggle spacing">
+          <i class="fas fa-arrows-alt-v"></i>
+          <span id="densityLabel">مريح</span>
+        </button>
+
+        <!-- Language -->
+        <button id="langToggle" type="button" class="pill" aria-label="Toggle language">
+          <i class="fas fa-language"></i>
+          <span id="langLabel">EN</span>
+        </button>
+
+        <!-- Theme -->
+        <button id="themeToggle" type="button" class="btn btn-ghost btn-sm p-2" aria-label="Toggle theme">
+          <i class="fas fa-moon text-lg" id="themeIcon"></i>
+        </button>
+
+        <!-- Profile -->
+        <div class="dropdown dropdown-end">
+          <button id="profileBtn" tabindex="0" type="button" class="flex items-center gap-2 btn btn-ghost px-3 py-2">
+            <div class="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center text-sm font-semibold">م</div>
+            <span class="hidden md:inline text-sm font-semibold" data-i18n="profile.name">محمد علي</span>
+            <i class="fas fa-chevron-down text-xs t-muted"></i>
+          </button>
+          <ul tabindex="0" class="dropdown-content z-[1] menu p-2 w-56 bg-base-100 border border-base-300 rounded-2xl shadow">
+            <li class="p-3 border-b border-base-300 rounded-2xl">
+              <div class="font-semibold" data-i18n="profile.name">محمد علي</div>
+              <div class="text-sm t-muted">parent@lejaclasses.com</div>
+            </li>
+            <li><a class="rounded-xl"><i class="fas fa-user-cog text-sm"></i> <span data-i18n="profile.settings">إعدادات الحساب</span></a></li>
+            <li><a class="rounded-xl"><i class="fas fa-bell text-sm"></i> <span data-i18n="profile.notifications">إشعارات</span></a></li>
+            <li><a class="rounded-xl"><i class="fas fa-sign-out-alt text-sm"></i> <span data-i18n="logout">تسجيل الخروج</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <main class="max-w-7xl mx-auto w-full" style="padding: var(--pad-page);">
+      <div class="flex flex-col" style="gap: var(--gap-page);">
+
+        <!-- HEADER -->
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <h2 class="t-title"><span data-i18n="page.title">متابعة</span> <span id="studentHeader">ليـن</span> 👋</h2>
+            <p class="t-body t-muted mt-1" data-i18n="page.subtitle">ملخص حضور/واجبات/درجات — بروتوتايب.</p>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <button type="button" class="btn btn-primary btn-sm">
+              <i class="fas fa-message ml-2"></i><span data-i18n="actions.messageTeacher">مراسلة المعلم</span>
+            </button>
+            <button type="button" class="btn btn-outline btn-sm border-base-300">
+              <i class="fas fa-file-download ml-2"></i><span data-i18n="actions.downloadReport">تحميل تقرير</span>
+            </button>
+            <button type="button" class="btn btn-ghost btn-sm">
+              <i class="fas fa-calendar-check ml-2"></i><span data-i18n="actions.bookSession">حجز حصة</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="stat-card p-5">
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-success/10 flex items-center justify-center mb-3">
+                  <i class="fas fa-user-check text-success"></i>
+                </div>
+                <div class="text-sm t-muted font-semibold" data-i18n="kpi.attendance">الحضور هذا الشهر</div>
+                <div class="text-3xl font-semibold mt-1">93%</div>
+              </div>
+              <span class="badge badge-success text-xs" data-i18n="kpi.good">جيد</span>
+            </div>
+          </div>
+
+          <div class="stat-card p-5">
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-warning/10 flex items-center justify-center mb-3">
+                  <i class="fas fa-clipboard-list text-warning"></i>
+                </div>
+                <div class="text-sm t-muted font-semibold" data-i18n="kpi.pending">واجبات معلّقة</div>
+                <div class="text-3xl font-semibold mt-1" id="pendingCount">2</div>
+              </div>
+              <span class="badge badge-warning text-xs" data-i18n="kpi.dueSoon">قريباً</span>
+            </div>
+          </div>
+
+          <div class="stat-card p-5">
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-info/10 flex items-center justify-center mb-3">
+                  <i class="fas fa-book-open text-info"></i>
+                </div>
+                <div class="text-sm t-muted font-semibold" data-i18n="kpi.upcoming">الحصة القادمة</div>
+                <div class="text-xl font-semibold mt-1" id="nextSession">اليوم 6:30</div>
+              </div>
+              <span class="badge badge-info text-xs" data-i18n="kpi.today">اليوم</span>
+            </div>
+          </div>
+
+          <div class="stat-card p-5">
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-3">
+                  <i class="fas fa-chart-line text-primary"></i>
+                </div>
+                <div class="text-sm t-muted font-semibold" data-i18n="kpi.avgScore">متوسط الدرجات</div>
+                <div class="text-3xl font-semibold mt-1" id="avgScore">78%</div>
+              </div>
+              <div class="relative w-16 h-16">
+                <canvas id="scoreChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress + Alerts -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="notion-card p-4 lg:col-span-2">
+            <div class="flex items-center justify-between mb-4">
+              <div class="t-h3" data-i18n="progress.title">التقدم خلال 6 أسابيع</div>
+              <div class="flex gap-2">
+                <button id="refreshCharts" type="button" class="btn btn-ghost btn-sm" aria-label="Refresh">
+                  <i class="fas fa-rotate"></i>
+                </button>
+                <button type="button" class="btn btn-outline btn-sm border-base-300">
+                  <i class="fas fa-filter ml-2"></i><span data-i18n="actions.filter">تصفية</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="h-72">
+              <canvas id="progressChart"></canvas>
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+                <div class="text-xs t-muted font-semibold" data-i18n="progress.bestSubject">أفضل مادة</div>
+                <div class="font-semibold mt-1" id="bestSubject">رياضيات</div>
+              </div>
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+                <div class="text-xs t-muted font-semibold" data-i18n="progress.focusSubject">مادة تحتاج تركيز</div>
+                <div class="font-semibold mt-1" id="focusSubject">فيزياء</div>
+              </div>
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+                <div class="text-xs t-muted font-semibold" data-i18n="progress.streak">سلسلة حضور</div>
+                <div class="font-semibold mt-1" id="streak">7 أيام</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="notion-card p-4 lg:col-span-1">
+            <div class="flex items-center justify-between mb-4">
+              <div class="t-h3" data-i18n="alerts.title">تنبيهات وملاحظات</div>
+              <span class="badge badge-ghost border border-base-300 text-xs" id="alertsCount">3</span>
+            </div>
+
+            <div class="space-y-3">
+              <div class="p-4 rounded-2xl border border-base-300">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-2xl bg-warning/10 flex items-center justify-center">
+                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="font-semibold text-sm" data-i18n="alerts.a1.title">واجب قريب الاستحقاق</div>
+                    <div class="text-xs t-muted mt-1" data-i18n="alerts.a1.body">واجب الفيزياء ينتهي غداً.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-2xl bg-info/10 flex items-center justify-center">
+                    <i class="fas fa-comment-dots text-info"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="font-semibold text-sm" data-i18n="alerts.a2.title">ملاحظة من المعلم</div>
+                    <div class="text-xs t-muted mt-1" data-i18n="alerts.a2.body">ليـن ممتازة في المشاركة داخل الحصة.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-2xl bg-success/10 flex items-center justify-center">
+                    <i class="fas fa-check-circle text-success"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="font-semibold text-sm" data-i18n="alerts.a3.title">نتيجة جديدة</div>
+                    <div class="text-xs t-muted mt-1" data-i18n="alerts.a3.body">تم إضافة درجة اختبار الرياضيات.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-base-300">
+              <button type="button" class="btn btn-primary btn-sm w-full">
+                <i class="fas fa-message ml-2"></i><span data-i18n="actions.openInbox">فتح الرسائل</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assignments + Payments -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="notion-card p-4 lg:col-span-2">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+              <div class="t-h3" data-i18n="asg.title">الواجبات</div>
+              <div class="hidden md:flex items-center bg-base-200/70 border border-base-300 rounded-2xl px-3 py-2">
+                <i class="fas fa-search text-neutral/50 text-sm"></i>
+                <input id="searchBox" type="text" placeholder="بحث..." class="bg-transparent border-none outline-none px-2 text-sm w-56" />
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="table w-full">
+                <thead>
+                  <tr>
+                    <th data-i18n="tbl.assignment">الواجب</th>
+                    <th data-i18n="tbl.subject">المادة</th>
+                    <th data-i18n="tbl.due">الاستحقاق</th>
+                    <th data-i18n="tbl.status">الحالة</th>
+                    <th data-i18n="tbl.actions">إجراءات</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="row-hover">
+                    <td data-i18n="asg1.name">واجب قوانين نيوتن</td>
+                    <td data-i18n="asg1.subj">فيزياء</td>
+                    <td>2026-02-09</td>
+                    <td><span class="badge badge-warning text-xs" data-i18n="status.pending">معلّق</span></td>
+                    <td class="space-x-2 space-x-reverse">
+                      <button type="button" class="btn btn-ghost btn-xs"><i class="fas fa-eye ml-1"></i><span data-i18n="actions.view">عرض</span></button>
+                      <button type="button" class="btn btn-ghost btn-xs"><i class="fas fa-paper-plane ml-1"></i><span data-i18n="actions.remindChild">تذكير الطالب</span></button>
+                    </td>
+                  </tr>
+                  <tr class="row-hover">
+                    <td data-i18n="asg2.name">اختبار قصير – المتجهات</td>
+                    <td data-i18n="asg2.subj">رياضيات</td>
+                    <td>2026-02-11</td>
+                    <td><span class="badge badge-warning text-xs" data-i18n="status.pending">معلّق</span></td>
+                    <td class="space-x-2 space-x-reverse">
+                      <button type="button" class="btn btn-ghost btn-xs"><i class="fas fa-eye ml-1"></i><span data-i18n="actions.view">عرض</span></button>
+                      <button type="button" class="btn btn-ghost btn-xs"><i class="fas fa-message ml-1"></i><span data-i18n="actions.messageTeacher">مراسلة المعلم</span></button>
+                    </td>
+                  </tr>
+                  <tr class="row-hover">
+                    <td data-i18n="asg3.name">ملخص درس – الروابط</td>
+                    <td data-i18n="asg3.subj">كيمياء</td>
+                    <td>2026-02-05</td>
+                    <td><span class="badge badge-success text-xs" data-i18n="status.done">مكتمل</span></td>
+                    <td class="space-x-2 space-x-reverse">
+                      <button type="button" class="btn btn-ghost btn-xs"><i class="fas fa-chart-bar ml-1"></i><span data-i18n="actions.results">النتائج</span></button>
+                      <button type="button" class="btn btn-ghost btn-xs"><i class="fas fa-download ml-1"></i><span data-i18n="actions.export">تصدير</span></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="notion-card p-4 lg:col-span-1">
+            <div class="flex items-center justify-between mb-4">
+              <div class="t-h3" data-i18n="pay.title">المدفوعات</div>
+              <span class="badge badge-ghost border border-base-300 text-xs" data-i18n="pay.badge">هذا الشهر</span>
+            </div>
+
+            <div class="space-y-3">
+              <div class="p-4 rounded-2xl border border-base-300">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="text-xs t-muted font-semibold" data-i18n="pay.next">الدفعة القادمة</div>
+                    <div class="font-semibold mt-1" id="nextPayment">2026-02-12</div>
+                  </div>
+                  <span class="badge badge-warning text-xs" data-i18n="pay.pending">معلّقة</span>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="text-xs t-muted font-semibold" data-i18n="pay.amount">المبلغ</div>
+                    <div class="font-semibold mt-1" id="payAmount">450 EGP</div>
+                  </div>
+                  <button type="button" class="btn btn-primary btn-sm">
+                    <i class="fas fa-credit-card ml-2"></i><span data-i18n="actions.payNow">ادفع الآن</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300">
+                <div class="text-xs t-muted font-semibold" data-i18n="pay.history">آخر عملية</div>
+                <div class="flex items-center justify-between mt-2">
+                  <div class="font-semibold">2026-01-12</div>
+                  <span class="badge badge-success text-xs" data-i18n="pay.paid">مدفوع</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-base-300">
+              <button type="button" class="btn btn-outline btn-sm w-full border-base-300">
+                <i class="fas fa-receipt ml-2"></i><span data-i18n="actions.viewInvoices">عرض الفواتير</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <footer class="mt-auto p-6 border-t border-base-300">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-sm t-muted" data-i18n="footer.copy">© 2026 LeJaClasses. جميع الحقوق محفوظة.</p>
+        <div class="flex items-center gap-4 text-sm t-muted">
+          <a href="admin-dashboard.html" class="hover:text-base-content transition-colors" data-i18n="footer.admin">لوحة الإدارة</a>
+          <a href="#" class="hover:text-base-content transition-colors" data-i18n="footer.help">المساعدة</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // === Safe DOM Wiring ===
+    document.addEventListener("DOMContentLoaded", () => {
+      const root = document.documentElement;
+
+      // Elements
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon   = document.getElementById("themeIcon");
+      const langToggle  = document.getElementById("langToggle");
+      const langLabel   = document.getElementById("langLabel");
+      const densityToggle = document.getElementById("densityToggle");
+      const densityLabel  = document.getElementById("densityLabel");
+      const refreshCharts = document.getElementById("refreshCharts");
+
+      // ===== Dictionaries =====
+      const dict = {
+        ar: {
+          "top.subtitle":"واجهة ولي الأمر",
+          "page.title":"متابعة",
+          "page.subtitle":"ملخص حضور/واجبات/درجات — بروتوتايب.",
+
+          "actions.messageTeacher":"مراسلة المعلم",
+          "actions.downloadReport":"تحميل تقرير",
+          "actions.bookSession":"حجز حصة",
+          "actions.filter":"تصفية",
+          "actions.view":"عرض",
+          "actions.results":"النتائج",
+          "actions.export":"تصدير",
+          "actions.remindChild":"تذكير الطالب",
+          "actions.openInbox":"فتح الرسائل",
+          "actions.payNow":"ادفع الآن",
+          "actions.viewInvoices":"عرض الفواتير",
+
+          "kpi.attendance":"الحضور هذا الشهر",
+          "kpi.pending":"واجبات معلّقة",
+          "kpi.upcoming":"الحصة القادمة",
+          "kpi.avgScore":"متوسط الدرجات",
+          "kpi.good":"جيد",
+          "kpi.dueSoon":"قريباً",
+          "kpi.today":"اليوم",
+
+          "progress.title":"التقدم خلال 6 أسابيع",
+          "progress.bestSubject":"أفضل مادة",
+          "progress.focusSubject":"مادة تحتاج تركيز",
+          "progress.streak":"سلسلة حضور",
+
+          "alerts.title":"تنبيهات وملاحظات",
+          "alerts.a1.title":"واجب قريب الاستحقاق",
+          "alerts.a1.body":"واجب الفيزياء ينتهي غداً.",
+          "alerts.a2.title":"ملاحظة من المعلم",
+          "alerts.a2.body":"ليـن ممتازة في المشاركة داخل الحصة.",
+          "alerts.a3.title":"نتيجة جديدة",
+          "alerts.a3.body":"تم إضافة درجة اختبار الرياضيات.",
+
+          "asg.title":"الواجبات",
+          "tbl.assignment":"الواجب",
+          "tbl.subject":"المادة",
+          "tbl.due":"الاستحقاق",
+          "tbl.status":"الحالة",
+          "tbl.actions":"إجراءات",
+
+          "asg1.name":"واجب قوانين نيوتن",
+          "asg1.subj":"فيزياء",
+          "asg2.name":"اختبار قصير – المتجهات",
+          "asg2.subj":"رياضيات",
+          "asg3.name":"ملخص درس – الروابط",
+          "asg3.subj":"كيمياء",
+
+          "status.pending":"معلّق",
+          "status.done":"مكتمل",
+
+          "pay.title":"المدفوعات",
+          "pay.badge":"هذا الشهر",
+          "pay.next":"الدفعة القادمة",
+          "pay.pending":"معلّقة",
+          "pay.amount":"المبلغ",
+          "pay.history":"آخر عملية",
+          "pay.paid":"مدفوع",
+
+          "profile.name":"محمد علي",
+          "profile.settings":"إعدادات الحساب",
+          "profile.notifications":"إشعارات",
+          "logout":"تسجيل الخروج",
+
+          "student.name":"ليـن",
+          "student.leen":"ليـن",
+          "student.omar":"عمر",
+
+          "footer.copy":"© 2026 LeJaClasses. جميع الحقوق محفوظة.",
+          "footer.admin":"لوحة الإدارة",
+          "footer.help":"المساعدة"
+        },
+        en: {
+          "top.subtitle":"Parent UI",
+          "page.title":"Tracking",
+          "page.subtitle":"Attendance / assignments / grades — prototype.",
+
+          "actions.messageTeacher":"Message teacher",
+          "actions.downloadReport":"Download report",
+          "actions.bookSession":"Book session",
+          "actions.filter":"Filter",
+          "actions.view":"View",
+          "actions.results":"Results",
+          "actions.export":"Export",
+          "actions.remindChild":"Remind student",
+          "actions.openInbox":"Open inbox",
+          "actions.payNow":"Pay now",
+          "actions.viewInvoices":"View invoices",
+
+          "kpi.attendance":"Attendance this month",
+          "kpi.pending":"Pending assignments",
+          "kpi.upcoming":"Next session",
+          "kpi.avgScore":"Average score",
+          "kpi.good":"Good",
+          "kpi.dueSoon":"Due soon",
+          "kpi.today":"Today",
+
+          "progress.title":"Progress (6 weeks)",
+          "progress.bestSubject":"Best subject",
+          "progress.focusSubject":"Needs focus",
+          "progress.streak":"Attendance streak",
+
+          "alerts.title":"Alerts & notes",
+          "alerts.a1.title":"Assignment due soon",
+          "alerts.a1.body":"Physics assignment due tomorrow.",
+          "alerts.a2.title":"Teacher note",
+          "alerts.a2.body":"Leen participates actively in class.",
+          "alerts.a3.title":"New result",
+          "alerts.a3.body":"Math quiz grade has been posted.",
+
+          "asg.title":"Assignments",
+          "tbl.assignment":"Assignment",
+          "tbl.subject":"Subject",
+          "tbl.due":"Due",
+          "tbl.status":"Status",
+          "tbl.actions":"Actions",
+
+          "asg1.name":"Newton's laws homework",
+          "asg1.subj":"Physics",
+          "asg2.name":"Quiz – Vectors",
+          "asg2.subj":"Math",
+          "asg3.name":"Lesson summary – Bonds",
+          "asg3.subj":"Chemistry",
+
+          "status.pending":"Pending",
+          "status.done":"Done",
+
+          "pay.title":"Payments",
+          "pay.badge":"This month",
+          "pay.next":"Next payment",
+          "pay.pending":"Pending",
+          "pay.amount":"Amount",
+          "pay.history":"Last payment",
+          "pay.paid":"Paid",
+
+          "profile.name":"Mohamed Ali",
+          "profile.settings":"Account settings",
+          "profile.notifications":"Notifications",
+          "logout":"Sign out",
+
+          "student.name":"Leen",
+          "student.leen":"Leen",
+          "student.omar":"Omar",
+
+          "footer.copy":"© 2026 LeJaClasses. All rights reserved.",
+          "footer.admin":"Admin",
+          "footer.help":"Help"
+        }
+      };
+
+      // ===== I18N =====
+      function applyI18n(lang){
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+          const key = el.getAttribute("data-i18n");
+          const val = dict[lang]?.[key];
+          if (val) el.textContent = val;
+        });
+      }
+
+      // ===== Theme =====
+      function updateThemeIcon(){
+        const now = root.getAttribute("data-theme");
+        themeIcon.className = now === "light" ? "fas fa-moon text-lg" : "fas fa-sun text-lg";
+      }
+      function setTheme(theme){
+        root.setAttribute("data-theme", theme);
+        localStorage.setItem("leja_theme", theme);
+        updateThemeIcon();
+        setTimeout(() => { destroyCharts(); initCharts(getStudent()); }, 50);
+      }
+      function initTheme(){
+        const saved = localStorage.getItem("leja_theme");
+        if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+        else root.setAttribute("data-theme", window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        updateThemeIcon();
+      }
+
+      // ===== Density =====
+      function setDensity(d){
+        root.setAttribute("data-density", d);
+        localStorage.setItem("leja_density", d);
+        const lang = getLang();
+        densityLabel.textContent = (lang === "en")
+          ? (d === "comfortable" ? "Comfortable" : "Compact")
+          : (d === "comfortable" ? "مريح" : "مضغوط");
+      }
+      function initDensity(){
+        const saved = localStorage.getItem("leja_density");
+        setDensity(saved === "compact" ? "compact" : "comfortable");
+      }
+
+      // ===== Language =====
+      function getLang(){ return (localStorage.getItem("leja_lang") === "en") ? "en" : "ar"; }
+      function setLanguage(lang){
+        localStorage.setItem("leja_lang", lang);
+        root.setAttribute("lang", lang);
+        root.setAttribute("dir", lang === "en" ? "ltr" : "rtl");
+        langLabel.textContent = (lang === "en") ? "AR" : "EN";
+        applyI18n(lang);
+        // keep density label synced
+        setDensity(root.getAttribute("data-density") || "comfortable");
+        // update student texts
+        applyStudent(getStudent());
+      }
+      function initLanguage(){ setLanguage(getLang()); }
+
+      // ===== Student =====
+      function getStudent(){ return localStorage.getItem("leja_student") || "leen"; }
+      const studentMap = {
+        leen: {
+          ar: { name:"ليـن", best:"رياضيات", focus:"فيزياء", streak:"7 أيام", pending:"2", next:"اليوم 6:30", avg:"78%" },
+          en: { name:"Leen", best:"Math",     focus:"Physics", streak:"7 days", pending:"2", next:"Today 6:30 PM", avg:"78%" }
+        },
+        omar: {
+          ar: { name:"عمر", best:"علوم",   focus:"رياضيات", streak:"4 أيام", pending:"3", next:"غداً 5:00", avg:"71%" },
+          en: { name:"Omar", best:"Science", focus:"Math",   streak:"4 days", pending:"3", next:"Tomorrow 5:00 PM", avg:"71%" }
+        }
+      };
+
+      function applyStudent(key){
+        const lang = getLang();
+        const d = studentMap[key]?.[lang] || studentMap.leen[lang];
+
+        document.getElementById("studentName").textContent = d.name;
+        document.getElementById("studentHeader").textContent = d.name;
+
+        document.getElementById("bestSubject").textContent = d.best;
+        document.getElementById("focusSubject").textContent = d.focus;
+        document.getElementById("streak").textContent = d.streak;
+
+        document.getElementById("pendingCount").textContent = d.pending;
+        document.getElementById("nextSession").textContent = d.next;
+        document.getElementById("avgScore").textContent = d.avg;
+
+        destroyCharts();
+        initCharts(key);
+      }
+
+      // ===== Charts =====
+      let scoreChart = null;
+      let progressChart = null;
+
+      function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+      function destroyCharts(){
+        if (scoreChart) { scoreChart.destroy(); scoreChart = null; }
+        if (progressChart) { progressChart.destroy(); progressChart = null; }
+      }
+      function initCharts(studentKey){
+        const score = document.getElementById("scoreChart");
+        const prog  = document.getElementById("progressChart");
+        if (!score || !prog) return;
+
+        const base300 = `oklch(${cssVar("--b3")})`;
+        const info    = `oklch(${cssVar("--in")})`;
+        const success = `oklch(${cssVar("--su")})`;
+        const baseContent = `oklch(${cssVar("--bc")})`;
+
+        const dataMap = {
+          leen: [70, 74, 76, 78, 80, 78],
+          omar: [62, 66, 68, 70, 73, 71]
+        };
+        const lineData = dataMap[studentKey] || dataMap.leen;
+        const last = lineData[lineData.length - 1];
+        const rest = 100 - last;
+
+        scoreChart = new Chart(score.getContext("2d"), {
+          type: "doughnut",
+          data: { datasets: [{ data: [last, rest], backgroundColor: [success, base300], borderWidth: 0, borderRadius: 999 }]},
+          options: { cutout: "74%", responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false }, tooltip: { enabled: false } } }
+        });
+
+        progressChart = new Chart(prog.getContext("2d"), {
+          type: "line",
+          data: {
+            labels: ["W1","W2","W3","W4","W5","W6"],
+            datasets: [{
+              label: "Score",
+              data: lineData,
+              borderColor: info,
+              backgroundColor: `color-mix(in oklab, ${info} 20%, transparent)`,
+              tension: 0.35,
+              fill: true,
+              borderWidth: 3,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, grid: { color: `color-mix(in oklab, ${base300} 65%, transparent)` }, ticks: { color: baseContent } },
+              x: { grid: { color: "transparent" }, ticks: { color: baseContent } }
+            }
+          }
+        });
+      }
+
+      // ===== Wire Events =====
+      themeToggle?.addEventListener("click", () => {
+        const now = root.getAttribute("data-theme");
+        setTheme(now === "light" ? "dark" : "light");
+      });
+
+      densityToggle?.addEventListener("click", () => {
+        const now = root.getAttribute("data-density") || "comfortable";
+        setDensity(now === "comfortable" ? "compact" : "comfortable");
+      });
+
+      langToggle?.addEventListener("click", () => {
+        const now = getLang();
+        setLanguage(now === "en" ? "ar" : "en");
+      });
+
+      document.querySelectorAll("[data-student]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const key = btn.getAttribute("data-student");
+          localStorage.setItem("leja_student", key);
+          applyStudent(key);
+        });
+      });
+
+      refreshCharts?.addEventListener("click", () => {
+        destroyCharts();
+        initCharts(getStudent());
+      });
+
+      // ===== Init =====
+      initTheme();
+      initDensity();
+      initLanguage();
+      applyStudent(getStudent());
+    });
+  </script>
+</body>
+</html>

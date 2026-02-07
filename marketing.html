@@ -1,0 +1,1200 @@
+<!-- File: marketing.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeJaClasses — Operations-first Education Platform</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.css" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    *{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;letter-spacing:-0.005em}
+
+    :root{
+      --pad-page:24px; --gap-page:24px; --card-pad:22px; --card-radius:18px; --btn-radius:14px;
+      --title-size:44px; --lead-size:16px; --h2-size:24px; --h3-size:18px; --body-size:14px;
+      --fw-title:800; --fw-h2:800; --fw-h3:700; --fw-body:600;
+    }
+    html[data-density="compact"]{
+      --pad-page:16px; --gap-page:16px; --card-pad:16px; --card-radius:14px; --btn-radius:12px;
+      --title-size:38px; --lead-size:14px; --h2-size:22px; --h3-size:16px; --body-size:13px;
+    }
+
+    body{
+      background-color: var(--fallback-b1, oklch(var(--b1)));
+      color: var(--fallback-bc, oklch(var(--bc)));
+    }
+
+    .page-bg{
+      background-image: radial-gradient(
+        circle at 1px 1px,
+        color-mix(in oklab, oklch(var(--b3)) 30%, transparent) 1px,
+        transparent 0
+      );
+      background-size: 18px 18px;
+    }
+
+    .navbar{
+      background: color-mix(in oklab, oklch(var(--b1)) 86%, transparent);
+      border-bottom: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      backdrop-filter: blur(10px);
+    }
+
+    .cardx{
+      background: var(--fallback-b1, oklch(var(--b1)));
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      border-radius: var(--card-radius);
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+    .cardx:hover{ box-shadow: 0 14px 34px rgba(0,0,0,.10); transform: translateY(-2px); }
+
+    .pill{
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      background: color-mix(in oklab, oklch(var(--b2)) 70%, transparent);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 800;
+      display: flex; align-items: center; gap: 8px;
+      transition: background-color .15s ease, transform .15s ease;
+    }
+    .pill:hover{ background: color-mix(in oklab, oklch(var(--b2)) 85%, transparent); transform: translateY(-1px); }
+
+    .btn{ border-radius: var(--btn-radius); font-weight: 800; }
+    .input,.select{
+      border-radius: var(--btn-radius);
+      background: var(--fallback-b1, oklch(var(--b1)));
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      font-weight: 800;
+    }
+
+    .t-title{ font-size: var(--title-size); font-weight: var(--fw-title); line-height: 1.05; }
+    .t-lead{ font-size: var(--lead-size); font-weight: 700; color: color-mix(in oklab, oklch(var(--bc)) 65%, transparent); }
+    .t-h2{ font-size: var(--h2-size); font-weight: var(--fw-h2); }
+    .t-h3{ font-size: var(--h3-size); font-weight: var(--fw-h3); }
+    .t-body{ font-size: var(--body-size); font-weight: var(--fw-body); color: color-mix(in oklab, oklch(var(--bc)) 72%, transparent); }
+
+    .grad-text{
+      background: linear-gradient(135deg,
+        color-mix(in oklab, oklch(var(--bc)) 92%, transparent) 0%,
+        color-mix(in oklab, oklch(var(--p)) 92%, transparent) 55%,
+        color-mix(in oklab, oklch(var(--su)) 92%, transparent) 100%
+      );
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    .hero-sheen{
+      background:
+        radial-gradient(800px 400px at 30% 10%,
+          color-mix(in oklab, oklch(var(--p)) 18%, transparent),
+          transparent 60%),
+        radial-gradient(700px 420px at 70% 0%,
+          color-mix(in oklab, oklch(var(--su)) 16%, transparent),
+          transparent 60%),
+        radial-gradient(700px 420px at 80% 60%,
+          color-mix(in oklab, oklch(var(--in)) 14%, transparent),
+          transparent 65%);
+    }
+
+    .chip{
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      background: color-mix(in oklab, oklch(var(--b2)) 65%, transparent);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 900;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .step{
+      border: 1px dashed var(--fallback-b3, oklch(var(--b3)));
+      border-radius: var(--card-radius);
+      background: color-mix(in oklab, oklch(var(--b2)) 45%, transparent);
+    }
+
+    :focus-visible{
+      outline: 3px solid color-mix(in oklab, oklch(var(--p)) 35%, transparent);
+      outline-offset: 2px;
+      border-radius: var(--btn-radius);
+    }
+
+    html[dir="ltr"] .text-left-rtl { text-align: left; }
+    html[dir="rtl"] .text-left-rtl { text-align: right; }
+  </style>
+</head>
+
+<body class="page-bg">
+  <!-- NAVBAR -->
+  <div class="navbar sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-base-content flex items-center justify-center shadow-sm">
+          <i class="fas fa-graduation-cap text-base-100 text-sm"></i>
+        </div>
+        <div class="leading-tight">
+          <div class="font-black text-lg">LeJaClasses</div>
+          <div class="text-xs opacity-70 font-bold" data-i18n="nav.tagline">Operations-first Education Platform</div>
+        </div>
+      </div>
+
+      <div class="hidden lg:flex items-center gap-2">
+        <a href="#product" class="pill"><i class="fas fa-cubes"></i><span data-i18n="nav.product">Product</span></a>
+        <a href="#phases" class="pill"><i class="fas fa-road"></i><span data-i18n="nav.roadmap">Roadmap</span></a>
+        <a href="#pricing" class="pill"><i class="fas fa-tags"></i><span data-i18n="nav.pricing">Pricing</span></a>
+        <a href="#partners" class="pill"><i class="fas fa-handshake"></i><span data-i18n="nav.partners">Partners</span></a>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="densityToggle" type="button" class="pill" aria-label="Toggle spacing">
+          <i class="fas fa-arrows-alt-v"></i>
+          <span id="densityLabel">Comfortable</span>
+        </button>
+        <button id="langToggle" type="button" class="pill" aria-label="Toggle language">
+          <i class="fas fa-language"></i>
+          <span id="langLabel">AR</span>
+        </button>
+        <button id="themeToggle" type="button" class="btn btn-ghost btn-sm p-2" aria-label="Toggle theme">
+          <i class="fas fa-moon text-lg" id="themeIcon"></i>
+        </button>
+
+        <a href="#contact" class="btn btn-primary btn-sm hidden md:inline-flex">
+          <i class="fas fa-rocket ml-2"></i>
+          <span data-i18n="nav.cta">Request a Demo</span>
+        </a>
+
+        <div class="dropdown dropdown-end lg:hidden">
+          <button class="btn btn-ghost btn-sm" tabindex="0" aria-label="Menu"><i class="fas fa-bars text-lg"></i></button>
+          <ul tabindex="0" class="dropdown-content z-[1] menu p-2 w-60 bg-base-100 border border-base-300 rounded-2xl shadow">
+            <li><a href="#product"><i class="fas fa-cubes"></i><span data-i18n="nav.product">Product</span></a></li>
+            <li><a href="#phases"><i class="fas fa-road"></i><span data-i18n="nav.roadmap">Roadmap</span></a></li>
+            <li><a href="#pricing"><i class="fas fa-tags"></i><span data-i18n="nav.pricing">Pricing</span></a></li>
+            <li><a href="#partners"><i class="fas fa-handshake"></i><span data-i18n="nav.partners">Partners</span></a></li>
+            <li class="pt-2"><a href="#contact" class="btn btn-primary btn-sm"><i class="fas fa-rocket ml-2"></i><span data-i18n="nav.cta">Request a Demo</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero-sheen">
+    <div class="max-w-7xl mx-auto" style="padding: var(--pad-page);">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+        <div class="space-y-6">
+          <div class="flex flex-wrap gap-2">
+            <span class="chip"><i class="fas fa-check ml-2"></i><span data-i18n="hero.chip1">Built for Egypt — phase 1</span></span>
+            <span class="chip"><i class="fas fa-globe ml-2"></i><span data-i18n="hero.chip2">Arabic & English</span></span>
+            <span class="chip"><i class="fab fa-microsoft ml-2"></i><span data-i18n="hero.chip3">Microsoft-first integrations</span></span>
+          </div>
+
+          <h1 class="t-title">
+            <span class="grad-text" data-i18n="hero.title1">Operations first.</span><br/>
+            <span data-i18n="hero.title2">Trust first.</span><br/>
+            <span data-i18n="hero.title3">Then LMS.</span>
+          </h1>
+
+          <p class="t-lead max-w-xl" data-i18n="hero.lead">
+            LeJaClasses organizes existing teacher/center workflows (WhatsApp, Excel, Zoom) into one system for sessions,
+            attendance, student visibility, and parent transparency — before becoming a full LMS.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <a href="#contact" class="btn btn-primary">
+              <i class="fas fa-rocket ml-2"></i><span data-i18n="hero.cta1">Request a Demo</span>
+            </a>
+            <a href="#product" class="btn btn-outline border-base-300">
+              <i class="fas fa-play ml-2"></i><span data-i18n="hero.cta2">See what we build</span>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <div class="cardx p-4">
+              <div class="text-xs opacity-70 font-black" data-i18n="hero.metric1.label">Outcome</div>
+              <div class="font-black text-lg" data-i18n="hero.metric1.value">Reliable attendance</div>
+              <div class="t-body mt-1" data-i18n="hero.metric1.desc">Stop revenue leakage & manual chaos.</div>
+            </div>
+            <div class="cardx p-4">
+              <div class="text-xs opacity-70 font-black" data-i18n="hero.metric2.label">Outcome</div>
+              <div class="font-black text-lg" data-i18n="hero.metric2.value">Session history</div>
+              <div class="t-body mt-1" data-i18n="hero.metric2.desc">Structured records for every class.</div>
+            </div>
+            <div class="cardx p-4">
+              <div class="text-xs opacity-70 font-black" data-i18n="hero.metric3.label">Outcome</div>
+              <div class="font-black text-lg" data-i18n="hero.metric3.value">Parent trust</div>
+              <div class="t-body mt-1" data-i18n="hero.metric3.desc">Transparency drives retention.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cardx p-6">
+          <div class="flex items-center justify-between">
+            <div class="t-h2" data-i18n="hero.previewTitle">What the platform looks like</div>
+            <span class="badge badge-ghost border border-base-300 text-xs" data-i18n="hero.previewBadge">Prototype UI</span>
+          </div>
+
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="step p-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-success/10 flex items-center justify-center">
+                  <i class="fas fa-calendar-check text-success"></i>
+                </div>
+                <div>
+                  <div class="font-black" data-i18n="hero.preview1.title">Sessions & Attendance</div>
+                  <div class="t-body" data-i18n="hero.preview1.desc">Track sessions and attendance fast — consistent and auditable.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step p-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-info/10 flex items-center justify-center">
+                  <i class="fas fa-users text-info"></i>
+                </div>
+                <div>
+                  <div class="font-black" data-i18n="hero.preview2.title">Student & Parent Dashboards</div>
+                  <div class="t-body" data-i18n="hero.preview2.desc">Parents see progress. Teachers reduce messages.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step p-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-warning/10 flex items-center justify-center">
+                  <i class="fab fa-microsoft text-warning"></i>
+                </div>
+                <div>
+                  <div class="font-black" data-i18n="hero.preview3.title">Microsoft Integrations</div>
+                  <div class="t-body" data-i18n="hero.preview3.desc">Teams / Forms / Power Automate — integration-first.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step p-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <i class="fas fa-certificate text-primary"></i>
+                </div>
+                <div>
+                  <div class="font-black" data-i18n="hero.preview4.title">Certification Layer</div>
+                  <div class="t-body" data-i18n="hero.preview4.desc">LeJa Certified Educator/Center — trust signal.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 p-4 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="font-black" data-i18n="hero.note.title">Core principle</div>
+            <div class="t-body mt-1" data-i18n="hero.note.body">
+              We don’t create new behavior — we organize existing behavior into a reliable operational system.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- SECTIONS -->
+  <main class="max-w-7xl mx-auto" style="padding: var(--pad-page);">
+    <div class="flex flex-col" style="gap: calc(var(--gap-page) * 1.2);">
+
+      <!-- PROBLEM -->
+      <section id="product" class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <div class="cardx p-6">
+          <div class="flex items-center justify-between">
+            <h2 class="t-h2" data-i18n="problem.title">The problem (Egypt — phase 1)</h2>
+            <span class="badge badge-warning text-xs" data-i18n="problem.badge">Reality check</span>
+          </div>
+          <div class="mt-4 space-y-3">
+            <div class="flex gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-warning/10 flex items-center justify-center"><i class="fas fa-comments text-warning"></i></div>
+              <div>
+                <div class="font-black" data-i18n="problem.p1.title">Fragmented tools</div>
+                <div class="t-body" data-i18n="problem.p1.desc">WhatsApp + Excel + Zoom with manual tracking and no unified history.</div>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-error/10 flex items-center justify-center"><i class="fas fa-chart-line text-error"></i></div>
+              <div>
+                <div class="font-black" data-i18n="problem.p2.title">Revenue leakage</div>
+                <div class="t-body" data-i18n="problem.p2.desc">Attendance chaos leads to missed payments and lost sessions.</div>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-info/10 flex items-center justify-center"><i class="fas fa-eye text-info"></i></div>
+              <div>
+                <div class="font-black" data-i18n="problem.p3.title">Low parent visibility</div>
+                <div class="t-body" data-i18n="problem.p3.desc">Parents can’t track attendance, progress, or session continuity.</div>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-neutral/10 flex items-center justify-center"><i class="fas fa-random text-neutral"></i></div>
+              <div>
+                <div class="font-black" data-i18n="problem.p4.title">Operational chaos in centers</div>
+                <div class="t-body" data-i18n="problem.p4.desc">No scalable processes; everything depends on people, not systems.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cardx p-6">
+          <div class="flex items-center justify-between">
+            <h2 class="t-h2" data-i18n="solution.title">Our solution</h2>
+            <span class="badge badge-success text-xs" data-i18n="solution.badge">Operations-first</span>
+          </div>
+
+          <div class="mt-4 space-y-4">
+            <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+              <div class="font-black" data-i18n="solution.s1.title">A single operational system</div>
+              <div class="t-body mt-1" data-i18n="solution.s1.desc">Sessions, attendance, student records, and parent visibility — unified.</div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="p-4 rounded-2xl border border-base-300">
+                <div class="font-black" data-i18n="solution.s2.title">Teacher + Center profiles</div>
+                <div class="t-body mt-1" data-i18n="solution.s2.desc">Professional brand and consistent operations.</div>
+              </div>
+              <div class="p-4 rounded-2xl border border-base-300">
+                <div class="font-black" data-i18n="solution.s3.title">Dashboards</div>
+                <div class="t-body mt-1" data-i18n="solution.s3.desc">Teacher view + Parent view + Student view.</div>
+              </div>
+              <div class="p-4 rounded-2xl border border-base-300">
+                <div class="font-black" data-i18n="solution.s4.title">Assisted attendance</div>
+                <div class="t-body mt-1" data-i18n="solution.s4.desc">Manual + assisted tracking (no embedded streaming in MVP).</div>
+              </div>
+              <div class="p-4 rounded-2xl border border-base-300">
+                <div class="font-black" data-i18n="solution.s5.title">Reports (phase 2)</div>
+                <div class="t-body mt-1" data-i18n="solution.s5.desc">Insights that increase retention and operational discipline.</div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl border border-base-300 bg-primary/5">
+              <div class="font-black" data-i18n="solution.key.title">Key idea</div>
+              <div class="t-body mt-1" data-i18n="solution.key.desc">Value is created by trust in operations — monetization comes after.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MICROSOFT -->
+      <section id="partners" class="cardx p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div>
+            <h2 class="t-h2" data-i18n="ms.title">Why Microsoft ecosystem</h2>
+            <p class="t-body mt-1" data-i18n="ms.lead">We integrate — not compete — with tools teachers already use.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="chip"><i class="fab fa-microsoft ml-2"></i> Teams</span>
+            <span class="chip"><i class="fas fa-list-check ml-2"></i> Forms</span>
+            <span class="chip"><i class="fas fa-bolt ml-2"></i> Power Automate</span>
+            <span class="chip"><i class="fas fa-chart-area ml-2"></i> Analytics</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
+          <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="font-black" data-i18n="ms.b1.title">Faster execution</div>
+            <div class="t-body mt-1" data-i18n="ms.b1.desc">Ship MVP faster by reusing existing infra.</div>
+          </div>
+          <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="font-black" data-i18n="ms.b2.title">Lower cost</div>
+            <div class="t-body mt-1" data-i18n="ms.b2.desc">Integration-first = no unnecessary infrastructure early.</div>
+          </div>
+          <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="font-black" data-i18n="ms.b3.title">Enterprise trust</div>
+            <div class="t-body mt-1" data-i18n="ms.b3.desc">Credibility for centers and later schools.</div>
+          </div>
+          <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="font-black" data-i18n="ms.b4.title">Scales to MENA</div>
+            <div class="t-body mt-1" data-i18n="ms.b4.desc">Easier expansion when the model is proven.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROADMAP / PHASES -->
+      <section id="phases" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="cardx p-6">
+          <div class="flex items-center justify-between">
+            <h2 class="t-h2" data-i18n="phases.title">Product roadmap</h2>
+            <span class="badge badge-info text-xs" data-i18n="phases.badge">Phased</span>
+          </div>
+          <p class="t-body mt-2" data-i18n="phases.lead">
+            Start with operational trust, then engagement, then LMS-grade features for schools.
+          </p>
+
+          <div class="mt-4 space-y-3">
+            <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+              <div class="font-black" data-i18n="phases.p1.title">Phase 1 — MVP (Operations)</div>
+              <div class="t-body mt-1" data-i18n="phases.p1.desc">Class/session management, attendance, student+parent dashboards, profiles.</div>
+            </div>
+            <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+              <div class="font-black" data-i18n="phases.p2.title">Phase 2 — Engagement</div>
+              <div class="t-body mt-1" data-i18n="phases.p2.desc">Materials, notes, reports, parent notifications.</div>
+            </div>
+            <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+              <div class="font-black" data-i18n="phases.p3.title">Phase 3 — LMS evolution</div>
+              <div class="t-body mt-1" data-i18n="phases.p3.desc">Assessments, analytics, compliance, school-level features.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cardx p-6 lg:col-span-2">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <h2 class="t-h2" data-i18n="timeline.title">Timeline & cost logic</h2>
+            <span class="badge badge-ghost border border-base-300 text-xs" data-i18n="timeline.badge">Lean MVP</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-5">
+            <div class="p-5 rounded-2xl border border-base-300">
+              <div class="text-xs opacity-70 font-black" data-i18n="timeline.t1.label">Phase 1</div>
+              <div class="font-black text-xl mt-1" data-i18n="timeline.t1.value">3–4 months</div>
+              <div class="t-body mt-2" data-i18n="timeline.t1.desc">Core operations + Microsoft integration + basic dashboards.</div>
+            </div>
+            <div class="p-5 rounded-2xl border border-base-300">
+              <div class="text-xs opacity-70 font-black" data-i18n="timeline.t2.label">Phase 2</div>
+              <div class="font-black text-xl mt-1" data-i18n="timeline.t2.value">~3 months</div>
+              <div class="t-body mt-2" data-i18n="timeline.t2.desc">Engagement features + reporting + notifications.</div>
+            </div>
+            <div class="p-5 rounded-2xl border border-base-300">
+              <div class="text-xs opacity-70 font-black" data-i18n="timeline.t3.label">Phase 3</div>
+              <div class="font-black text-xl mt-1" data-i18n="timeline.t3.value">6+ months</div>
+              <div class="t-body mt-2" data-i18n="timeline.t3.desc">LMS-grade features + schools.</div>
+            </div>
+          </div>
+
+          <div class="mt-5 p-5 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <div class="font-black" data-i18n="cost.title">Estimated MVP build (outsourced)</div>
+                <div class="t-body mt-1" data-i18n="cost.desc">Low 5-figure USD range — integration-first, no unnecessary infra.</div>
+              </div>
+              <span class="badge badge-success text-xs" data-i18n="cost.badge">Cost-efficient</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CERTIFICATION -->
+      <section class="cardx p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <h2 class="t-h2" data-i18n="cert.title">LeJa Certified Educator / Center</h2>
+          <span class="badge badge-primary text-xs" data-i18n="cert.badge">Trust layer</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-5">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="font-black" data-i18n="cert.c1.title">Not a badge</div>
+            <div class="t-body mt-1" data-i18n="cert.c1.desc">A quality certification built on operational evidence.</div>
+          </div>
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="font-black" data-i18n="cert.c2.title">Possible criteria</div>
+            <div class="t-body mt-1" data-i18n="cert.c2.desc">Attendance consistency, session completion, parent satisfaction, content standards.</div>
+          </div>
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="font-black" data-i18n="cert.c3.title">Future value</div>
+            <div class="t-body mt-1" data-i18n="cert.c3.desc">Premium positioning, upskilling programs, certification-based monetization.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRICING -->
+      <section id="pricing" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="cardx p-6 lg:col-span-1">
+          <h2 class="t-h2" data-i18n="pricing.title">Pricing & revenue</h2>
+          <p class="t-body mt-2" data-i18n="pricing.lead">
+            Monetize operations and trust — not content. Revenue starts after value is proven.
+          </p>
+
+          <div class="mt-4 p-4 rounded-2xl border border-base-300 bg-warning/10">
+            <div class="font-black" data-i18n="pricing.delay.title">Payments are deliberately delayed</div>
+            <div class="t-body mt-1" data-i18n="pricing.delay.desc">
+              MVP focuses on operational trust and habit before financial/legal complexity.
+            </div>
+          </div>
+        </div>
+
+        <div class="cardx p-6">
+          <div class="flex items-center justify-between">
+            <div class="t-h3" data-i18n="pricing.free.title">Free (limited)</div>
+            <span class="badge badge-ghost border border-base-300 text-xs" data-i18n="pricing.free.badge">MVP</span>
+          </div>
+          <div class="mt-3 space-y-2">
+            <div class="t-body"><i class="fas fa-check text-success ml-2"></i><span data-i18n="pricing.free.f1">Basic classes & sessions</span></div>
+            <div class="t-body"><i class="fas fa-check text-success ml-2"></i><span data-i18n="pricing.free.f2">Manual attendance</span></div>
+            <div class="t-body"><i class="fas fa-check text-success ml-2"></i><span data-i18n="pricing.free.f3">Student list + basic history</span></div>
+            <div class="t-body"><i class="fas fa-minus text-neutral ml-2"></i><span data-i18n="pricing.free.f4">Limited dashboards</span></div>
+          </div>
+
+          <div class="mt-5 p-4 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="text-xs opacity-70 font-black" data-i18n="pricing.free.noteLabel">Best for</div>
+            <div class="font-black mt-1" data-i18n="pricing.free.note">New teachers validating workflow</div>
+          </div>
+
+          <button class="btn btn-outline border-base-300 w-full mt-5">
+            <i class="fas fa-leaf ml-2"></i><span data-i18n="pricing.free.cta">Start free</span>
+          </button>
+        </div>
+
+        <div class="cardx p-6">
+          <div class="flex items-center justify-between">
+            <div class="t-h3" data-i18n="pricing.paid.title">Paid</div>
+            <span class="badge badge-success text-xs" data-i18n="pricing.paid.badge">Subscriptions</span>
+          </div>
+
+          <div class="mt-3 grid grid-cols-1 gap-3">
+            <div class="p-4 rounded-2xl border border-base-300">
+              <div class="font-black" data-i18n="pricing.teacher.title">Individual teacher</div>
+              <div class="text-2xl font-black mt-1">$10–15<span class="text-sm opacity-70 font-black">/mo</span></div>
+              <div class="t-body mt-2" data-i18n="pricing.teacher.desc">More sessions, dashboards, and operational reliability.</div>
+            </div>
+            <div class="p-4 rounded-2xl border border-base-300">
+              <div class="font-black" data-i18n="pricing.center.title">Small center</div>
+              <div class="text-2xl font-black mt-1">$40–60<span class="text-sm opacity-70 font-black">/mo</span></div>
+              <div class="t-body mt-2" data-i18n="pricing.center.desc">Multiple teachers, structured operations, parent transparency.</div>
+            </div>
+          </div>
+
+          <div class="mt-5 p-4 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="text-xs opacity-70 font-black" data-i18n="pricing.paid.noteLabel">Next phases add</div>
+            <div class="t-body mt-1" data-i18n="pricing.paid.note">Premium reports, parent features, certification eligibility, school licensing later.</div>
+          </div>
+
+          <a href="#contact" class="btn btn-primary w-full mt-5">
+            <i class="fas fa-rocket ml-2"></i><span data-i18n="pricing.paid.cta">Talk to us</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- GTM + DEFENSIBILITY -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="cardx p-6">
+          <h2 class="t-h2" data-i18n="gtm.title">Go-to-market</h2>
+          <p class="t-body mt-2" data-i18n="gtm.lead">Start where operational pain is strongest, then scale by trust and word-of-mouth.</p>
+
+          <div class="mt-4 space-y-3">
+            <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40 flex items-center justify-between">
+              <div class="font-black" data-i18n="gtm.s1">1) Individual teachers</div>
+              <span class="badge badge-ghost border border-base-300 text-xs" data-i18n="gtm.phase1">Phase 1</span>
+            </div>
+            <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40 flex items-center justify-between">
+              <div class="font-black" data-i18n="gtm.s2">2) Small centers</div>
+              <span class="badge badge-ghost border border-base-300 text-xs" data-i18n="gtm.phase1">Phase 1</span>
+            </div>
+            <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40 flex items-center justify-between">
+              <div class="font-black" data-i18n="gtm.s3">3) Medium centers</div>
+              <span class="badge badge-info text-xs" data-i18n="gtm.phase2">Phase 2</span>
+            </div>
+            <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40 flex items-center justify-between">
+              <div class="font-black" data-i18n="gtm.s4">4) Schools</div>
+              <span class="badge badge-primary text-xs" data-i18n="gtm.phase3">Phase 3</span>
+            </div>
+          </div>
+
+          <div class="mt-5 p-4 rounded-2xl border border-base-300 bg-success/10">
+            <div class="font-black" data-i18n="gtm.driver.title">Growth drivers</div>
+            <div class="t-body mt-1" data-i18n="gtm.driver.desc">Word of mouth, parent demand, and certification credibility.</div>
+          </div>
+        </div>
+
+        <div class="cardx p-6">
+          <h2 class="t-h2" data-i18n="def.title">Defensibility (even with outsourcing)</h2>
+          <p class="t-body mt-2" data-i18n="def.lead">We stay defensible by owning the process and trust logic — not just code.</p>
+
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="p-4 rounded-2xl border border-base-300">
+              <div class="font-black" data-i18n="def.d1.title">Process ownership</div>
+              <div class="t-body mt-1" data-i18n="def.d1.desc">We define the operational system and standards.</div>
+            </div>
+            <div class="p-4 rounded-2xl border border-base-300">
+              <div class="font-black" data-i18n="def.d2.title">Certification logic</div>
+              <div class="t-body mt-1" data-i18n="def.d2.desc">Trust layer + scoring criteria becomes hard to copy.</div>
+            </div>
+            <div class="p-4 rounded-2xl border border-base-300">
+              <div class="font-black" data-i18n="def.d3.title">Market relationships</div>
+              <div class="t-body mt-1" data-i18n="def.d3.desc">Teacher/center networks and distribution learnings.</div>
+            </div>
+            <div class="p-4 rounded-2xl border border-base-300">
+              <div class="font-black" data-i18n="def.d4.title">Roadmap control</div>
+              <div class="t-body mt-1" data-i18n="def.d4.desc">Execution companies build — founders steer.</div>
+            </div>
+          </div>
+
+          <div class="mt-5 p-4 rounded-2xl border border-base-300 bg-base-200/40">
+            <div class="font-black" data-i18n="def.note.title">Partner clarity</div>
+            <div class="t-body mt-1" data-i18n="def.note.desc">This page aligns founders, partners, and execution teams on what to build and why.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT / CTA -->
+      <section id="contact" class="cardx p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <div>
+            <h2 class="t-h2" data-i18n="contact.title">Build with us</h2>
+            <p class="t-body mt-2" data-i18n="contact.lead">
+              If you’re a partner, execution company, or early adopter teacher/center — leave your details and we’ll share the MVP scope + next steps.
+            </p>
+
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+                <div class="font-black" data-i18n="contact.c1.title">Who this is for</div>
+                <div class="t-body mt-1" data-i18n="contact.c1.desc">Founders, partners, execution teams, early teachers & centers.</div>
+              </div>
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+                <div class="font-black" data-i18n="contact.c2.title">What you’ll get</div>
+                <div class="t-body mt-1" data-i18n="contact.c2.desc">Scope, roadmap, and a clear execution plan.</div>
+              </div>
+            </div>
+
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span class="chip"><i class="fas fa-shield-halved ml-2"></i><span data-i18n="contact.chip1">Trust-first</span></span>
+              <span class="chip"><i class="fas fa-screwdriver-wrench ml-2"></i><span data-i18n="contact.chip2">Prototype-friendly</span></span>
+              <span class="chip"><i class="fas fa-scale-balanced ml-2"></i><span data-i18n="contact.chip3">Scales safely</span></span>
+            </div>
+          </div>
+
+          <form class="cardx p-6" onsubmit="event.preventDefault(); window.__fakeSubmit();">
+            <div class="flex items-center justify-between">
+              <div class="t-h3" data-i18n="contact.form.title">Request a demo</div>
+              <span class="badge badge-success text-xs" id="formStatus" data-i18n="contact.form.badge">Fast reply</span>
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs font-black opacity-70" data-i18n="contact.form.name">Name</label>
+                <input class="input input-bordered w-full mt-1" placeholder="..." />
+              </div>
+              <div>
+                <label class="text-xs font-black opacity-70" data-i18n="contact.form.role">Role</label>
+                <select class="select select-bordered w-full mt-1">
+                  <option data-i18n="contact.form.roleOpt1">Teacher</option>
+                  <option data-i18n="contact.form.roleOpt2">Center Owner</option>
+                  <option data-i18n="contact.form.roleOpt3">Partner</option>
+                  <option data-i18n="contact.form.roleOpt4">Execution Company</option>
+                </select>
+              </div>
+              <div class="md:col-span-2">
+                <label class="text-xs font-black opacity-70" data-i18n="contact.form.email">Email / Phone</label>
+                <input class="input input-bordered w-full mt-1" placeholder="name@email.com / 01xxxxxxxxx" />
+              </div>
+              <div class="md:col-span-2">
+                <label class="text-xs font-black opacity-70" data-i18n="contact.form.note">What do you need?</label>
+                <textarea class="textarea textarea-bordered w-full mt-1" rows="4" placeholder="..."></textarea>
+              </div>
+            </div>
+
+            <button class="btn btn-primary w-full mt-4">
+              <i class="fas fa-paper-plane ml-2"></i>
+              <span data-i18n="contact.form.submit">Send</span>
+            </button>
+
+            <p class="t-body mt-3" data-i18n="contact.form.foot">
+              Prototype note: This form is UI-only (no backend). In production we connect it to email/CRM.
+            </p>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-base-300 mt-10">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-base-content flex items-center justify-center">
+          <i class="fas fa-graduation-cap text-base-100 text-sm"></i>
+        </div>
+        <div>
+          <div class="font-black">LeJaClasses</div>
+          <div class="text-xs opacity-70 font-bold" data-i18n="footer.copy">Built for trust, scalability, and long-term value.</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 text-sm font-black opacity-70">
+        <a class="hover:opacity-100" href="#product" data-i18n="footer.product">Product</a>
+        <span>•</span>
+        <a class="hover:opacity-100" href="#phases" data-i18n="footer.roadmap">Roadmap</a>
+        <span>•</span>
+        <a class="hover:opacity-100" href="#pricing" data-i18n="footer.pricing">Pricing</a>
+        <span>•</span>
+        <a class="hover:opacity-100" href="#contact" data-i18n="footer.contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== Prototype-only submit feedback =====
+    window.__fakeSubmit = function(){
+      const el = document.getElementById("formStatus");
+      if(!el) return;
+      el.className = "badge badge-success text-xs";
+      el.textContent = (getLang() === "en") ? "Sent (prototype)" : "تم الإرسال (بروتوتايب)";
+      setTimeout(() => {
+        el.className = "badge badge-success text-xs";
+        el.textContent = (getLang() === "en") ? "Fast reply" : "رد سريع";
+      }, 2500);
+    }
+
+    // ===== I18N =====
+    const dict = {
+      ar: {
+        "nav.tagline":"منصة تشغيل تعليمية (Operations-first)",
+        "nav.product":"المنتج",
+        "nav.roadmap":"الخطة",
+        "nav.pricing":"التسعير",
+        "nav.partners":"الشركاء",
+        "nav.cta":"اطلب عرض",
+
+        "hero.chip1":"مبني لمصر — المرحلة 1",
+        "hero.chip2":"عربي + إنجليزي",
+        "hero.chip3":"تكامل Microsoft أولاً",
+        "hero.title1":"تشغيل أولاً.",
+        "hero.title2":"ثقة أولاً.",
+        "hero.title3":"ثم LMS.",
+        "hero.lead":"LeJaClasses بتنظم شغل المدرس/السنتر الموجود أصلاً (واتساب، إكسل، زووم) في نظام واحد للحصص والحضور وسجل الطالب وشفافية ولي الأمر — قبل ما تتحول لـ LMS كامل.",
+        "hero.cta1":"اطلب عرض",
+        "hero.cta2":"شوف هنَبني إيه",
+        "hero.metric1.label":"النتيجة",
+        "hero.metric1.value":"حضور موثوق",
+        "hero.metric1.desc":"وداعاً لتسريب الإيراد والفوضى.",
+        "hero.metric2.label":"النتيجة",
+        "hero.metric2.value":"سجل حصص",
+        "hero.metric2.desc":"تاريخ منظم لكل حصة.",
+        "hero.metric3.label":"النتيجة",
+        "hero.metric3.value":"ثقة ولي الأمر",
+        "hero.metric3.desc":"الشفافية بتزود الاستمرارية.",
+
+        "hero.previewTitle":"شكل المنتج",
+        "hero.previewBadge":"UI Prototype",
+        "hero.preview1.title":"الحصص والحضور",
+        "hero.preview1.desc":"تتبع سريع وموثوق للحصص والحضور.",
+        "hero.preview2.title":"لوحات الطالب وولي الأمر",
+        "hero.preview2.desc":"ولي الأمر يشوف التقدم — والمدرس يقلل الرسائل.",
+        "hero.preview3.title":"تكاملات Microsoft",
+        "hero.preview3.desc":"Teams / Forms / Power Automate — تكامل أولاً.",
+        "hero.preview4.title":"طبقة الاعتماد",
+        "hero.preview4.desc":"LeJa Certified Educator/Center — إشارة ثقة.",
+        "hero.note.title":"مبدأ أساسي",
+        "hero.note.body":"إحنا مش بنخلق سلوك جديد — إحنا بننظم السلوك الحالي في نظام تشغيلي موثوق.",
+
+        "problem.title":"المشكلة (مصر — المرحلة 1)",
+        "problem.badge":"الواقع",
+        "problem.p1.title":"أدوات متفرقة",
+        "problem.p1.desc":"واتساب + إكسل + زووم بدون سجل موحد أو نظام متابعة.",
+        "problem.p2.title":"تسريب الإيراد",
+        "problem.p2.desc":"فوضى الحضور بتسبب حصص ضايعة ومدفوعات مفقودة.",
+        "problem.p3.title":"رؤية ضعيفة لولي الأمر",
+        "problem.p3.desc":"مفيش شفافية كفاية عن الحضور والتقدم والاستمرارية.",
+        "problem.p4.title":"فوضى تشغيلية في السناتر",
+        "problem.p4.desc":"كل حاجة معتمدة على أشخاص مش على سيستم.",
+
+        "solution.title":"الحل",
+        "solution.badge":"تشغيل أولاً",
+        "solution.s1.title":"نظام تشغيلي واحد",
+        "solution.s1.desc":"حصص + حضور + سجل طالب + شفافية ولي الأمر — في مكان واحد.",
+        "solution.s2.title":"بروفايل مدرس/سنتر",
+        "solution.s2.desc":"شكل احترافي وتشغيل ثابت.",
+        "solution.s3.title":"Dashboards",
+        "solution.s3.desc":"واجهة مدرس + ولي أمر + طالب.",
+        "solution.s4.title":"حضور مساعد",
+        "solution.s4.desc":"Manual + Assisted (بدون ستريمينج داخل المنصة في الـ MVP).",
+        "solution.s5.title":"تقارير (المرحلة 2)",
+        "solution.s5.desc":"Insights بتزود retention وانضباط التشغيل.",
+        "solution.key.title":"الفكرة",
+        "solution.key.desc":"القيمة = ثقة تشغيلية… والفلوس تيجي بعد ما الناس تعتمد عليك.",
+
+        "ms.title":"ليه Microsoft Ecosystem",
+        "ms.lead":"إحنا بنتكامل — مش بننافس — الأدوات اللي الناس بتستخدمها.",
+        "ms.b1.title":"تنفيذ أسرع",
+        "ms.b1.desc":"نطلع MVP أسرع باستخدام بنية جاهزة.",
+        "ms.b2.title":"تكلفة أقل",
+        "ms.b2.desc":"تكامل أولاً = مفيش Infra زيادة بدري.",
+        "ms.b3.title":"ثقة Enterprise",
+        "ms.b3.desc":"مناسب للسناتر وبعدها المدارس.",
+        "ms.b4.title":"قابل للتوسع",
+        "ms.b4.desc":"أسهل للتوسع لما الموديل يثبت.",
+
+        "phases.title":"الخطة (Phases)",
+        "phases.badge":"مرحلي",
+        "phases.lead":"نبدأ بثقة التشغيل، بعدين تفاعل، بعدين LMS كامل للمدارس.",
+        "phases.p1.title":"Phase 1 — MVP (تشغيل)",
+        "phases.p1.desc":"إدارة فصول/حصص، حضور، واجهات طالب/ولي أمر، بروفايلات.",
+        "phases.p2.title":"Phase 2 — تفاعل وقيمة",
+        "phases.p2.desc":"مواد، ملاحظات، تقارير، إشعارات ولي الأمر.",
+        "phases.p3.title":"Phase 3 — LMS",
+        "phases.p3.desc":"اختبارات، تحليلات، امتثال، خصائص مدارس.",
+
+        "timeline.title":"الجدول والتكلفة",
+        "timeline.badge":"Lean MVP",
+        "timeline.t1.label":"Phase 1",
+        "timeline.t1.value":"3–4 شهور",
+        "timeline.t1.desc":"تشغيل أساسي + تكامل Microsoft + Dashboards بسيطة.",
+        "timeline.t2.label":"Phase 2",
+        "timeline.t2.value":"~3 شهور",
+        "timeline.t2.desc":"Features التفاعل + تقارير + إشعارات.",
+        "timeline.t3.label":"Phase 3",
+        "timeline.t3.value":"6+ شهور",
+        "timeline.t3.desc":"LMS كامل + مدارس.",
+        "cost.title":"تقدير بناء MVP (Outsourced)",
+        "cost.desc":"Low 5-figure USD — تكامل أولاً، بدون infra زيادة.",
+        "cost.badge":"فعّال",
+
+        "cert.title":"LeJa Certified Educator / Center",
+        "cert.badge":"طبقة ثقة",
+        "cert.c1.title":"مش Badge",
+        "cert.c1.desc":"اعتماد جودة مبني على أدلة تشغيلية.",
+        "cert.c2.title":"معايير محتملة",
+        "cert.c2.desc":"ثبات الحضور، إكمال الحصص، رضا ولي الأمر، معايير محتوى.",
+        "cert.c3.title":"قيمة مستقبلية",
+        "cert.c3.desc":"Premium positioning + Upskilling + Monetization بالاعتماد.",
+
+        "pricing.title":"التسعير والإيراد",
+        "pricing.lead":"بنبيع التشغيل والثقة — مش المحتوى. الإيراد يبدأ بعد ما القيمة تثبت.",
+        "pricing.delay.title":"المدفوعات متأخرة عمداً",
+        "pricing.delay.desc":"الـ MVP هدفه الثقة والعادة قبل التعقيد المالي/القانوني.",
+        "pricing.free.title":"Free (محدود)",
+        "pricing.free.badge":"MVP",
+        "pricing.free.f1":"فصول وحصص أساسية",
+        "pricing.free.f2":"حضور يدوي",
+        "pricing.free.f3":"قائمة طلاب + سجل بسيط",
+        "pricing.free.f4":"Dashboards محدودة",
+        "pricing.free.noteLabel":"مناسب لـ",
+        "pricing.free.note":"مدرسين بيجربوا ويثبتوا العملية",
+        "pricing.free.cta":"ابدأ مجاناً",
+        "pricing.paid.title":"Paid",
+        "pricing.paid.badge":"Subscriptions",
+        "pricing.teacher.title":"مدرس فردي",
+        "pricing.teacher.desc":"حصص أكثر + dashboards + ثبات تشغيل.",
+        "pricing.center.title":"سنتر صغير",
+        "pricing.center.desc":"أكتر من مدرس + تشغيل منظم + شفافية ولي الأمر.",
+        "pricing.paid.noteLabel":"اللي جاي",
+        "pricing.paid.note":"Premium reports + Parent features + Eligibility للاعتماد + Licensing للمدارس لاحقاً.",
+        "pricing.paid.cta":"كلمنا",
+
+        "gtm.title":"Go-To-Market",
+        "gtm.lead":"نبدأ من أقوى ألم تشغيلي، ونكبر بالثقة والـ word-of-mouth.",
+        "gtm.s1":"1) مدرسين أفراد",
+        "gtm.s2":"2) سناتر صغيرة",
+        "gtm.s3":"3) سناتر متوسطة",
+        "gtm.s4":"4) مدارس",
+        "gtm.phase1":"Phase 1",
+        "gtm.phase2":"Phase 2",
+        "gtm.phase3":"Phase 3",
+        "gtm.driver.title":"محركات النمو",
+        "gtm.driver.desc":"السمعة، طلب ولي الأمر، ومصداقية الاعتماد.",
+
+        "def.title":"الحماية (حتى مع التطوير الخارجي)",
+        "def.lead":"النسخة الحقيقية بتتبني بامتلاك العملية ومنطق الثقة مش الكود بس.",
+        "def.d1.title":"امتلاك العملية",
+        "def.d1.desc":"إحنا بنحدد النظام والمعايير.",
+        "def.d2.title":"منطق الاعتماد",
+        "def.d2.desc":"طبقة الثقة والمعايير صعبة تتنسخ.",
+        "def.d3.title":"علاقات السوق",
+        "def.d3.desc":"شبكات مدرسين/سناتر وتعلم التوزيع.",
+        "def.d4.title":"تحكم في الروودماب",
+        "def.d4.desc":"شركة التنفيذ تبني — والمؤسسين يوجّهوا.",
+        "def.note.title":"وضوح للشركاء",
+        "def.note.desc":"الصفحة دي بتوحّد الفهم: هنبني إيه وليه وإزاي.",
+
+        "contact.title":"ابني معانا",
+        "contact.lead":"لو أنت شريك/شركة تنفيذ/مدرس أو سنتر early adopter — سيب بياناتك ونشارك scope وخطوات التنفيذ.",
+        "contact.c1.title":"مناسب لـ",
+        "contact.c1.desc":"Founders, partners, execution teams, teachers & centers.",
+        "contact.c2.title":"هتاخد إيه؟",
+        "contact.c2.desc":"Scope + roadmap + خطة تنفيذ واضحة.",
+        "contact.chip1":"ثقة أولاً",
+        "contact.chip2":"بروتوتايب friendly",
+        "contact.chip3":"توسع آمن",
+
+        "contact.form.title":"اطلب عرض",
+        "contact.form.badge":"رد سريع",
+        "contact.form.name":"الاسم",
+        "contact.form.role":"الدور",
+        "contact.form.roleOpt1":"مدرس",
+        "contact.form.roleOpt2":"صاحب سنتر",
+        "contact.form.roleOpt3":"شريك",
+        "contact.form.roleOpt4":"شركة تنفيذ",
+        "contact.form.email":"إيميل / موبايل",
+        "contact.form.note":"محتاج إيه؟",
+        "contact.form.submit":"إرسال",
+        "contact.form.foot":"ملاحظة بروتوتايب: الفورم UI فقط (بدون backend).",
+
+        "footer.copy":"مبني للثقة والتوسع والقيمة طويلة المدى.",
+        "footer.product":"المنتج",
+        "footer.roadmap":"الخطة",
+        "footer.pricing":"التسعير",
+        "footer.contact":"تواصل"
+      },
+
+      en: {
+        "nav.tagline":"Operations-first Education Platform",
+        "nav.product":"Product",
+        "nav.roadmap":"Roadmap",
+        "nav.pricing":"Pricing",
+        "nav.partners":"Partners",
+        "nav.cta":"Request a Demo",
+
+        "hero.chip1":"Built for Egypt — phase 1",
+        "hero.chip2":"Arabic & English",
+        "hero.chip3":"Microsoft-first integrations",
+        "hero.title1":"Operations first.",
+        "hero.title2":"Trust first.",
+        "hero.title3":"Then LMS.",
+        "hero.lead":"LeJaClasses organizes existing teacher/center workflows (WhatsApp, Excel, Zoom) into one system for sessions, attendance, student visibility, and parent transparency — before becoming a full LMS.",
+        "hero.cta1":"Request a Demo",
+        "hero.cta2":"See what we build",
+        "hero.metric1.label":"Outcome",
+        "hero.metric1.value":"Reliable attendance",
+        "hero.metric1.desc":"Stop revenue leakage & manual chaos.",
+        "hero.metric2.label":"Outcome",
+        "hero.metric2.value":"Session history",
+        "hero.metric2.desc":"Structured records for every class.",
+        "hero.metric3.label":"Outcome",
+        "hero.metric3.value":"Parent trust",
+        "hero.metric3.desc":"Transparency drives retention.",
+
+        "hero.previewTitle":"What the platform looks like",
+        "hero.previewBadge":"Prototype UI",
+        "hero.preview1.title":"Sessions & Attendance",
+        "hero.preview1.desc":"Track sessions and attendance fast — consistent and auditable.",
+        "hero.preview2.title":"Student & Parent Dashboards",
+        "hero.preview2.desc":"Parents see progress. Teachers reduce messages.",
+        "hero.preview3.title":"Microsoft Integrations",
+        "hero.preview3.desc":"Teams / Forms / Power Automate — integration-first.",
+        "hero.preview4.title":"Certification Layer",
+        "hero.preview4.desc":"LeJa Certified Educator/Center — trust signal.",
+        "hero.note.title":"Core principle",
+        "hero.note.body":"We don’t create new behavior — we organize existing behavior into a reliable operational system.",
+
+        "problem.title":"The problem (Egypt — phase 1)",
+        "problem.badge":"Reality check",
+        "problem.p1.title":"Fragmented tools",
+        "problem.p1.desc":"WhatsApp + Excel + Zoom with manual tracking and no unified history.",
+        "problem.p2.title":"Revenue leakage",
+        "problem.p2.desc":"Attendance chaos leads to missed payments and lost sessions.",
+        "problem.p3.title":"Low parent visibility",
+        "problem.p3.desc":"Parents can’t track attendance, progress, or session continuity.",
+        "problem.p4.title":"Operational chaos in centers",
+        "problem.p4.desc":"No scalable processes; everything depends on people, not systems.",
+
+        "solution.title":"Our solution",
+        "solution.badge":"Operations-first",
+        "solution.s1.title":"A single operational system",
+        "solution.s1.desc":"Sessions, attendance, student records, and parent visibility — unified.",
+        "solution.s2.title":"Teacher + Center profiles",
+        "solution.s2.desc":"Professional brand and consistent operations.",
+        "solution.s3.title":"Dashboards",
+        "solution.s3.desc":"Teacher view + Parent view + Student view.",
+        "solution.s4.title":"Assisted attendance",
+        "solution.s4.desc":"Manual + assisted tracking (no embedded streaming in MVP).",
+        "solution.s5.title":"Reports (phase 2)",
+        "solution.s5.desc":"Insights that increase retention and operational discipline.",
+        "solution.key.title":"Key idea",
+        "solution.key.desc":"Value is created by trust in operations — monetization comes after.",
+
+        "ms.title":"Why Microsoft ecosystem",
+        "ms.lead":"We integrate — not compete — with tools teachers already use.",
+        "ms.b1.title":"Faster execution",
+        "ms.b1.desc":"Ship MVP faster by reusing existing infra.",
+        "ms.b2.title":"Lower cost",
+        "ms.b2.desc":"Integration-first = no unnecessary infrastructure early.",
+        "ms.b3.title":"Enterprise trust",
+        "ms.b3.desc":"Credibility for centers and later schools.",
+        "ms.b4.title":"Scales to MENA",
+        "ms.b4.desc":"Easier expansion when the model is proven.",
+
+        "phases.title":"Product roadmap",
+        "phases.badge":"Phased",
+        "phases.lead":"Start with operational trust, then engagement, then LMS-grade features for schools.",
+        "phases.p1.title":"Phase 1 — MVP (Operations)",
+        "phases.p1.desc":"Class/session management, attendance, student+parent dashboards, profiles.",
+        "phases.p2.title":"Phase 2 — Engagement",
+        "phases.p2.desc":"Materials, notes, reports, parent notifications.",
+        "phases.p3.title":"Phase 3 — LMS evolution",
+        "phases.p3.desc":"Assessments, analytics, compliance, school-level features.",
+
+        "timeline.title":"Timeline & cost logic",
+        "timeline.badge":"Lean MVP",
+        "timeline.t1.label":"Phase 1",
+        "timeline.t1.value":"3–4 months",
+        "timeline.t1.desc":"Core operations + Microsoft integration + basic dashboards.",
+        "timeline.t2.label":"Phase 2",
+        "timeline.t2.value":"~3 months",
+        "timeline.t2.desc":"Engagement features + reporting + notifications.",
+        "timeline.t3.label":"Phase 3",
+        "timeline.t3.value":"6+ months",
+        "timeline.t3.desc":"LMS-grade features + schools.",
+        "cost.title":"Estimated MVP build (outsourced)",
+        "cost.desc":"Low 5-figure USD range — integration-first, no unnecessary infra.",
+        "cost.badge":"Cost-efficient",
+
+        "cert.title":"LeJa Certified Educator / Center",
+        "cert.badge":"Trust layer",
+        "cert.c1.title":"Not a badge",
+        "cert.c1.desc":"A quality certification built on operational evidence.",
+        "cert.c2.title":"Possible criteria",
+        "cert.c2.desc":"Attendance consistency, session completion, parent satisfaction, content standards.",
+        "cert.c3.title":"Future value",
+        "cert.c3.desc":"Premium positioning, upskilling programs, certification-based monetization.",
+
+        "pricing.title":"Pricing & revenue",
+        "pricing.lead":"Monetize operations and trust — not content. Revenue starts after value is proven.",
+        "pricing.delay.title":"Payments are deliberately delayed",
+        "pricing.delay.desc":"MVP focuses on operational trust and habit before financial/legal complexity.",
+        "pricing.free.title":"Free (limited)",
+        "pricing.free.badge":"MVP",
+        "pricing.free.f1":"Basic classes & sessions",
+        "pricing.free.f2":"Manual attendance",
+        "pricing.free.f3":"Student list + basic history",
+        "pricing.free.f4":"Limited dashboards",
+        "pricing.free.noteLabel":"Best for",
+        "pricing.free.note":"New teachers validating workflow",
+        "pricing.free.cta":"Start free",
+        "pricing.paid.title":"Paid",
+        "pricing.paid.badge":"Subscriptions",
+        "pricing.teacher.title":"Individual teacher",
+        "pricing.teacher.desc":"More sessions, dashboards, and operational reliability.",
+        "pricing.center.title":"Small center",
+        "pricing.center.desc":"Multiple teachers, structured operations, parent transparency.",
+        "pricing.paid.noteLabel":"Next phases add",
+        "pricing.paid.note":"Premium reports, parent features, certification eligibility, school licensing later.",
+        "pricing.paid.cta":"Talk to us",
+
+        "gtm.title":"Go-to-market",
+        "gtm.lead":"Start where operational pain is strongest, then scale by trust and word-of-mouth.",
+        "gtm.s1":"1) Individual teachers",
+        "gtm.s2":"2) Small centers",
+        "gtm.s3":"3) Medium centers",
+        "gtm.s4":"4) Schools",
+        "gtm.phase1":"Phase 1",
+        "gtm.phase2":"Phase 2",
+        "gtm.phase3":"Phase 3",
+        "gtm.driver.title":"Growth drivers",
+        "gtm.driver.desc":"Word of mouth, parent demand, and certification credibility.",
+
+        "def.title":"Defensibility (even with outsourcing)",
+        "def.lead":"We stay defensible by owning the process and trust logic — not just code.",
+        "def.d1.title":"Process ownership",
+        "def.d1.desc":"We define the operational system and standards.",
+        "def.d2.title":"Certification logic",
+        "def.d2.desc":"Trust layer + scoring criteria becomes hard to copy.",
+        "def.d3.title":"Market relationships",
+        "def.d3.desc":"Teacher/center networks and distribution learnings.",
+        "def.d4.title":"Roadmap control",
+        "def.d4.desc":"Execution companies build — founders steer.",
+        "def.note.title":"Partner clarity",
+        "def.note.desc":"This page aligns founders, partners, and execution teams on what to build and why.",
+
+        "contact.title":"Build with us",
+        "contact.lead":"If you’re a partner, execution company, or early adopter teacher/center — leave your details and we’ll share the MVP scope + next steps.",
+        "contact.c1.title":"Who this is for",
+        "contact.c1.desc":"Founders, partners, execution teams, early teachers & centers.",
+        "contact.c2.title":"What you’ll get",
+        "contact.c2.desc":"Scope, roadmap, and a clear execution plan.",
+        "contact.chip1":"Trust-first",
+        "contact.chip2":"Prototype-friendly",
+        "contact.chip3":"Scales safely",
+
+        "contact.form.title":"Request a demo",
+        "contact.form.badge":"Fast reply",
+        "contact.form.name":"Name",
+        "contact.form.role":"Role",
+        "contact.form.roleOpt1":"Teacher",
+        "contact.form.roleOpt2":"Center Owner",
+        "contact.form.roleOpt3":"Partner",
+        "contact.form.roleOpt4":"Execution Company",
+        "contact.form.email":"Email / Phone",
+        "contact.form.note":"What do you need?",
+        "contact.form.submit":"Send",
+        "contact.form.foot":"Prototype note: This form is UI-only (no backend).",
+
+        "footer.copy":"Built for trust, scalability, and long-term value.",
+        "footer.product":"Product",
+        "footer.roadmap":"Roadmap",
+        "footer.pricing":"Pricing",
+        "footer.contact":"Contact"
+      }
+    };
+
+    function getLang(){ return (localStorage.getItem("leja_lang") === "ar") ? "ar" : "en"; }
+    function setLang(lang){
+      localStorage.setItem("leja_lang", lang);
+      document.documentElement.setAttribute("lang", lang);
+      document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+      document.querySelectorAll("[data-i18n]").forEach(el=>{
+        const key = el.getAttribute("data-i18n");
+        const val = dict[lang]?.[key];
+        if(val) el.textContent = val;
+      });
+      // update labels
+      const density = document.documentElement.getAttribute("data-density") || "comfortable";
+      setDensity(density, true);
+      document.getElementById("langLabel").textContent = (lang === "en") ? "AR" : "EN";
+    }
+
+    function setTheme(theme){
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("leja_theme", theme);
+      const icon = document.getElementById("themeIcon");
+      icon.className = theme === "light" ? "fas fa-moon text-lg" : "fas fa-sun text-lg";
+    }
+
+    function setDensity(d, silent){
+      document.documentElement.setAttribute("data-density", d);
+      localStorage.setItem("leja_density", d);
+      const lang = getLang();
+      const label = document.getElementById("densityLabel");
+      label.textContent = (lang === "ar")
+        ? (d === "comfortable" ? "مريح" : "مضغوط")
+        : (d === "comfortable" ? "Comfortable" : "Compact");
+      if(!silent){
+        // small micro-feedback (no toast to keep standard)
+        label.style.opacity = "0.7";
+        setTimeout(()=>label.style.opacity="1",150);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", ()=>{
+      // init theme
+      const savedTheme = localStorage.getItem("leja_theme");
+      if(savedTheme === "light" || savedTheme === "dark") setTheme(savedTheme);
+      else setTheme(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+      // init density
+      const savedDensity = localStorage.getItem("leja_density");
+      setDensity(savedDensity === "compact" ? "compact" : "comfortable", true);
+
+      // init language
+      const savedLang = localStorage.getItem("leja_lang");
+      setLang(savedLang === "ar" ? "ar" : "en");
+
+      // wire
+      document.getElementById("themeToggle").addEventListener("click", ()=>{
+        const now = document.documentElement.getAttribute("data-theme");
+        setTheme(now === "light" ? "dark" : "light");
+      });
+
+      document.getElementById("langToggle").addEventListener("click", ()=>{
+        const now = getLang();
+        setLang(now === "ar" ? "en" : "ar");
+      });
+
+      document.getElementById("densityToggle").addEventListener("click", ()=>{
+        const now = document.documentElement.getAttribute("data-density") || "comfortable";
+        setDensity(now === "comfortable" ? "compact" : "comfortable");
+      });
+    });
+  </script>
+</body>
+</html>

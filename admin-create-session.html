@@ -1,0 +1,126 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.js"></script>
+<div class="drawer lg:drawer-open">
+  <input id="sidebar-toggle" type="checkbox" class="drawer-toggle" />
+  
+  <!-- Main content -->
+  <div class="drawer-content flex flex-col bg-base-100 min-h-screen">
+    <!-- Topbar -->
+    <div class="w-full navbar bg-base-100 border-b border-base-300">
+      <label for="sidebar-toggle" class="btn btn-ghost lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </label>
+
+      <span class="text-xl font-semibold ml-2">LeJaClasses</span>
+    </div>
+
+    <!-- Page container -->
+    <div class="p-6 lg:p-10">
+      <!-- PAGE CONTENT GOES HERE -->
+   <!DOCTYPE html>
+<html data-theme="warmneutral">
+<head>
+  <title>Create Session – LeJaClasses</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.js"></script>
+</head>
+
+<body>
+<div class="drawer lg:drawer-open">
+  <input id="sidebar-toggle" type="checkbox" class="drawer-toggle" />
+
+  <div class="drawer-content flex flex-col bg-base-100 min-h-screen">
+
+    <div class="navbar bg-base-100 border-b border-base-300">
+      <label for="sidebar-toggle" class="btn btn-ghost lg:hidden">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" 
+             stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" 
+                stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </label>
+      <span class="ml-2 text-xl font-semibold">Create Session</span>
+    </div>
+
+    <div class="p-6 lg:p-10 max-w-xl">
+
+      <div class="card bg-white shadow p-8 rounded-xl space-y-6">
+
+        <div>
+          <label class="font-medium">Session Date</label>
+          <input type="date" class="input input-bordered w-full" />
+        </div>
+
+        <div>
+          <label class="font-medium">Session Time</label>
+          <input type="time" class="input input-bordered w-full" />
+        </div>
+
+        <div>
+          <label class="font-medium">Teacher</label>
+          <select class="select select-bordered w-full">
+            <option>Ahmed Mostafa</option>
+            <option>Sara Ibrahim</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="font-medium">Status</label>
+          <select class="select select-bordered w-full">
+            <option>Planned</option>
+            <option>Completed</option>
+          </select>
+        </div>
+
+        <a href="admin-class-details.html" class="btn btn-primary w-full">
+          Save Session
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="drawer-side">
+    <label for="sidebar-toggle" class="drawer-overlay"></label>
+    <aside class="w-64 bg-secondary text-neutral p-6 space-y-4">
+      <h2 class="text-2xl font-bold mb-4">LeJaClasses</h2>
+      <nav class="space-y-2">
+        <a href="admin-dashboard.html" class="btn btn-ghost w-full justify-start">Dashboard</a>
+        <a href="admin-classes.html" class="btn btn-ghost w-full justify-start bg-neutral/10">Classes</a>
+      </nav>
+    </aside>
+  </div>
+
+</div>
+</body>
+</html>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="drawer-side">
+    <label for="sidebar-toggle" class="drawer-overlay"></label>
+    <aside class="w-64 bg-secondary text-neutral p-6 space-y-4">
+      <h2 class="text-2xl font-bold mb-4">LeJaClasses</h2>
+
+      <nav class="space-y-2">
+        <a class="btn btn-ghost justify-start w-full text-left"
+           href="admin-dashboard.html">Dashboard</a>
+        <a class="btn btn-ghost justify-start w-full text-left"
+           href="admin-classes.html">Classes</a>
+        <a class="btn btn-ghost justify-start w-full text-left"
+           href="#">Teachers</a>
+        <a class="btn btn-ghost justify-start w-full text-left"
+           href="#">Students</a>
+        <a class="btn btn-ghost justify-start w-full text-left"
+           href="#">Attendance</a>
+      </nav>
+    </aside>
+  </div>
+</div>

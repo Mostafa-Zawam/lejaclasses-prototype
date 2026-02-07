@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeJaClasses – Partner Demo (Strategy + Scope)</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- DaisyUI (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.css" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    *{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      letter-spacing:-0.01em;
+    }
+    body{
+      background-color: var(--fallback-b1, oklch(var(--b1)));
+      color: var(--fallback-bc, oklch(var(--bc)));
+    }
+
+    /* Subtle grid background */
+    .page-bg{
+      background-image: radial-gradient(
+        circle at 1px 1px,
+        color-mix(in oklab, oklch(var(--b3)) 28%, transparent) 1px,
+        transparent 0
+      );
+      background-size: 18px 18px;
+    }
+
+    /* Cards */
+    .card-shell{
+      background: var(--fallback-b1, oklch(var(--b1)));
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      border-radius: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .card-shell:hover{ box-shadow: 0 12px 28px rgba(0,0,0,.10); }
+
+    .section-title{
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .kbdish{
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      background: var(--fallback-b2, oklch(var(--b2)));
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 600;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .focus-ring:focus-visible{
+      outline: 3px solid color-mix(in oklab, oklch(var(--p)) 35%, transparent);
+      outline-offset: 2px;
+      border-radius: 14px;
+    }
+
+    /* Navbar */
+    .topbar{
+      background: color-mix(in oklab, oklch(var(--b1)) 90%, transparent);
+      border-bottom: 1px solid var(--fallback-b3, oklch(var(--b3)));
+      backdrop-filter: blur(10px);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar{width:10px;height:10px}
+    ::-webkit-scrollbar-track{background: var(--fallback-b2, oklch(var(--b2))); border-radius: 999px}
+    ::-webkit-scrollbar-thumb{background: var(--fallback-b3, oklch(var(--b3))); border-radius: 999px}
+    ::-webkit-scrollbar-thumb:hover{background: var(--fallback-n, oklch(var(--n)))}
+
+    /* Spacing modes */
+    body[data-density="comfortable"] .dens-pad { padding: 20px !important; }
+    body[data-density="comfortable"] .dens-gap { gap: 18px !important; }
+    body[data-density="comfortable"] .dens-mb  { margin-bottom: 18px !important; }
+    body[data-density="comfortable"] .dens-pt  { padding-top: 16px !important; }
+    body[data-density="comfortable"] .dens-py  { padding-top: 14px !important; padding-bottom: 14px !important; }
+
+    body[data-density="compact"] .dens-pad { padding: 14px !important; }
+    body[data-density="compact"] .dens-gap { gap: 12px !important; }
+    body[data-density="compact"] .dens-mb  { margin-bottom: 12px !important; }
+    body[data-density="compact"] .dens-pt  { padding-top: 10px !important; }
+    body[data-density="compact"] .dens-py  { padding-top: 10px !important; padding-bottom: 10px !important; }
+
+    /* Language switching */
+    [data-lang="en"] .lang-ar { display:none !important; }
+    [data-lang="ar"] .lang-en { display:none !important; }
+
+    /* Small helper for anchor highlight */
+    .toc a.active{
+      background: var(--fallback-b2, oklch(var(--b2)));
+      border: 1px solid var(--fallback-b3, oklch(var(--b3)));
+    }
+  </style>
+</head>
+
+<body class="page-bg" data-density="comfortable" data-lang="en">
+
+  <!-- TOP BAR -->
+  <div class="topbar sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-3">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-primary text-primary-content flex items-center justify-center shadow-sm">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <div class="leading-tight">
+            <div class="flex items-center gap-2">
+              <h1 class="text-lg font-bold">LeJaClasses</h1>
+              <span class="badge badge-outline border-base-300">Partner Demo</span>
+            </div>
+            <p class="text-xs opacity-70">
+              <span class="lang-en">Strategy + Scope Pack (Prototype-ready)</span>
+              <span class="lang-ar">عرض للشريك: استراتيجية + نطاق التنفيذ (بروتوتايب)</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Language -->
+          <div class="dropdown dropdown-end">
+            <button class="btn btn-sm btn-outline border-base-300 focus-ring" id="langBtn">
+              <i class="fas fa-language"></i>
+              <span class="lang-en">Language</span><span class="lang-ar">اللغة</span>
+              <i class="fas fa-chevron-down opacity-70"></i>
+            </button>
+            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 border border-base-300 rounded-2xl w-44">
+              <li><a class="focus-ring" id="setEN"><i class="fas fa-flag"></i> English</a></li>
+              <li><a class="focus-ring" id="setAR"><i class="fas fa-flag"></i> العربية</a></li>
+            </ul>
+          </div>
+
+          <!-- Density -->
+          <div class="dropdown dropdown-end">
+            <button class="btn btn-sm btn-outline border-base-300 focus-ring">
+              <i class="fas fa-arrows-alt-v"></i>
+              <span class="lang-en">Density</span><span class="lang-ar">المسافات</span>
+              <i class="fas fa-chevron-down opacity-70"></i>
+            </button>
+            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 border border-base-300 rounded-2xl w-56">
+              <li><a class="focus-ring" id="densComfort"><i class="fas fa-expand"></i> <span class="lang-en">Comfortable</span><span class="lang-ar">مريح</span></a></li>
+              <li><a class="focus-ring" id="densCompact"><i class="fas fa-compress"></i> <span class="lang-en">Compact</span><span class="lang-ar">مضغوط</span></a></li>
+            </ul>
+          </div>
+
+          <!-- Theme -->
+          <button class="btn btn-sm btn-ghost focus-ring" id="themeToggle" aria-label="Toggle theme">
+            <i class="fas fa-moon text-lg" id="themeIcon"></i>
+          </button>
+
+          <!-- Primary CTA -->
+          <a href="#next-steps" class="btn btn-sm btn-primary focus-ring">
+            <i class="fas fa-paper-plane"></i>
+            <span class="lang-en">Next Steps</span><span class="lang-ar">الخطوات القادمة</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <header class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 dens-gap gap-6 items-start">
+      <div class="lg:col-span-8">
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <span class="kbdish"><i class="fas fa-bolt"></i> <span class="lang-en">Ops-first MVP</span><span class="lang-ar">MVP عمليات أولاً</span></span>
+          <span class="kbdish"><i class="fab fa-microsoft"></i> <span class="lang-en">Microsoft Integration</span><span class="lang-ar">تكامل مايكروسوفت</span></span>
+          <span class="kbdish"><i class="fas fa-shield-alt"></i> <span class="lang-en">Trust + Certification</span><span class="lang-ar">ثقة + اعتماد</span></span>
+        </div>
+
+        <h2 class="text-3xl sm:text-4xl font-bold leading-tight">
+          <span class="lang-en">LeJaClasses: an education operations platform built for trust, before content.</span>
+          <span class="lang-ar">LeJaClasses: منصة تشغيل تعليمية تُبنى على الثقة قبل المحتوى.</span>
+        </h2>
+
+        <p class="mt-4 text-base sm:text-lg opacity-80 leading-relaxed">
+          <span class="lang-en">
+            This page is designed for partners and execution companies. It clarifies what we build, why it matters,
+            how value is created, and how we scale safely (Egypt first, MENA next).
+          </span>
+          <span class="lang-ar">
+            الصفحة دي معمولة للشركاء وشركات التنفيذ: بتوضح هنَبني إيه، وليه مهم، وإزاي القيمة بتتخلق،
+            وإزاي نكبر بشكل آمن (مصر أولاً ثم MENA).
+          </span>
+        </p>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a class="btn btn-primary focus-ring" href="#scope">
+            <i class="fas fa-layer-group"></i>
+            <span class="lang-en">View MVP Scope</span><span class="lang-ar">نطاق الـ MVP</span>
+          </a>
+          <a class="btn btn-outline border-base-300 focus-ring" href="#timeline">
+            <i class="fas fa-clock"></i>
+            <span class="lang-en">Timeline & Cost Logic</span><span class="lang-ar">المدة والتكلفة</span>
+          </a>
+          <a class="btn btn-ghost focus-ring" href="#risks">
+            <i class="fas fa-triangle-exclamation"></i>
+            <span class="lang-en">Risks & Assumptions</span><span class="lang-ar">المخاطر والافتراضات</span>
+          </a>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="card-shell dens-pad p-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-xs opacity-70 font-semibold">
+                  <span class="lang-en">Phase 1</span><span class="lang-ar">المرحلة 1</span>
+                </div>
+                <div class="text-lg font-bold">
+                  <span class="lang-en">Operations MVP</span><span class="lang-ar">MVP تشغيل</span>
+                </div>
+              </div>
+              <div class="w-11 h-11 rounded-2xl bg-success/10 text-success flex items-center justify-center">
+                <i class="fas fa-sitemap"></i>
+              </div>
+            </div>
+            <p class="mt-3 text-sm opacity-80">
+              <span class="lang-en">Sessions, attendance, visibility, roles, reporting basics.</span>
+              <span class="lang-ar">جلسات، حضور، رؤية واضحة للأطراف، صلاحيات، تقارير أساسية.</span>
+            </p>
+          </div>
+
+          <div class="card-shell dens-pad p-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-xs opacity-70 font-semibold">
+                  <span class="lang-en">Phase 2</span><span class="lang-ar">المرحلة 2</span>
+                </div>
+                <div class="text-lg font-bold">
+                  <span class="lang-en">Engagement</span><span class="lang-ar">تفاعل</span>
+                </div>
+              </div>
+              <div class="w-11 h-11 rounded-2xl bg-info/10 text-info flex items-center justify-center">
+                <i class="fas fa-bell"></i>
+              </div>
+            </div>
+            <p class="mt-3 text-sm opacity-80">
+              <span class="lang-en">Materials, notes, notifications, premium insights.</span>
+              <span class="lang-ar">محتوى، ملاحظات، إشعارات، إنسايتس مدفوعة.</span>
+            </p>
+          </div>
+
+          <div class="card-shell dens-pad p-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-xs opacity-70 font-semibold">
+                  <span class="lang-en">Phase 3</span><span class="lang-ar">المرحلة 3</span>
+                </div>
+                <div class="text-lg font-bold">
+                  <span class="lang-en">LMS Evolution</span><span class="lang-ar">تحول LMS</span>
+                </div>
+              </div>
+              <div class="w-11 h-11 rounded-2xl bg-warning/10 text-warning flex items-center justify-center">
+                <i class="fas fa-graduation-cap"></i>
+              </div>
+            </div>
+            <p class="mt-3 text-sm opacity-80">
+              <span class="lang-en">Assessments, certifications, school-level features.</span>
+              <span class="lang-ar">اختبارات، اعتماد، خصائص للمدارس.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOC -->
+      <aside class="lg:col-span-4">
+        <div class="card-shell p-5 dens-pad sticky top-[90px]">
+          <div class="flex items-center justify-between">
+            <h3 class="section-title text-base">
+              <span class="lang-en">On this page</span><span class="lang-ar">محتوى الصفحة</span>
+            </h3>
+            <span class="badge badge-outline border-base-300">
+              <span class="lang-en">Partner-ready</span><span class="lang-ar">جاهز للنقاش</span>
+            </span>
+          </div>
+
+          <div class="mt-4 toc flex flex-col gap-2 text-sm">
+            <a class="btn btn-ghost justify-start focus-ring" href="#problem"><i class="fas fa-circle-exclamation w-5"></i><span class="lang-en">Market Problem</span><span class="lang-ar">مشكلة السوق</span></a>
+            <a class="btn btn-ghost justify-start focus-ring" href="#vision"><i class="fas fa-binoculars w-5"></i><span class="lang-en">Product Vision</span><span class="lang-ar">الرؤية</span></a>
+            <a class="btn btn-ghost justify-start focus-ring" href="#scope"><i class="fas fa-list-check w-5"></i><span class="lang-en">MVP Scope</span><span class="lang-ar">نطاق الـ MVP</span></a>
+            <a class="btn btn-ghost justify-start focus-ring" href="#microsoft"><i class="fab fa-microsoft w-5"></i><span class="lang-en">Why Microsoft</span><span class="lang-ar">لماذا مايكروسوفت</span></a>
+            <a class="btn btn-ghost justify-start focus-ring" href="#monetization"><i class="fas fa-coins w-5"></i><span class="lang-en">Monetization</span><span class="lang-ar">تحقيق الدخل</span></a>
+            <a class="btn btn-ghost justify-start focus-ring" href="#timeline"><i class="fas fa-clock w-5"></i><span class="lang-en">Timeline & Cost</span><span class="lang-ar">المدة والتكلفة</span></a>
+            <a class="btn btn-ghost justify-start focus-ring" href="#risks"><i class="fas fa-shield-halved w-5"></i><span class="lang-en">Risks & Assumptions</span><span class="lang-ar">المخاطر والافتراضات</span></a>
+            <a class="btn btn-ghost justify-start focus-ring" href="#next-steps"><i class="fas fa-flag-checkered w-5"></i><span class="lang-en">Next Steps</span><span class="lang-ar">الخطوات القادمة</span></a>
+          </div>
+
+          <div class="mt-5 border-t border-base-300 pt-4 text-xs opacity-75 leading-relaxed">
+            <span class="lang-en">
+              Tip: Use <b>Compact</b> for meeting mode and <b>Comfortable</b> for reading.
+            </span>
+            <span class="lang-ar">
+              ملحوظة: استخدم <b>Compact</b> أثناء الاجتماع و<b>Comfortable</b> للقراءة.
+            </span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 pb-12 space-y-6">
+
+    <!-- PROBLEM -->
+    <section id="problem" class="card-shell dens-pad p-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 dens-mb mb-4">
+        <h3 class="text-xl section-title flex items-center gap-2">
+          <span class="w-10 h-10 rounded-2xl bg-error/10 text-error flex items-center justify-center">
+            <i class="fas fa-circle-exclamation"></i>
+          </span>
+          <span class="lang-en">Market Problem (Egypt – Phase 1)</span>
+          <span class="lang-ar">مشكلة السوق (مصر – المرحلة 1)</span>
+        </h3>
+        <span class="badge badge-outline border-base-300">
+          <span class="lang-en">We organize existing behavior</span>
+          <span class="lang-ar">بننظم سلوك موجود بالفعل</span>
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 dens-gap gap-6">
+        <div class="lg:col-span-6">
+          <div class="text-sm opacity-80 leading-relaxed">
+            <p class="lang-en">
+              Teachers and centers currently operate across WhatsApp, Excel, Zoom, and manual attendance.
+              There is no unified system for sessions, tracking, or parent visibility.
+            </p>
+            <p class="lang-ar">
+              الواقع الحالي: المدرسين والسناتر شغالين على واتساب/إكسل/زوم وحضور يدوي.
+              مفيش نظام موحّد للجلسات أو التتبع أو رؤية ولي الأمر.
+            </p>
+          </div>
+
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+              <div class="font-semibold text-sm">
+                <span class="lang-en">Pain</span><span class="lang-ar">الألم</span>
+              </div>
+              <ul class="mt-2 text-sm opacity-85 list-disc list-inside space-y-1">
+                <li class="lang-en">Lost revenue from weak attendance tracking</li>
+                <li class="lang-en">No structured session history</li>
+                <li class="lang-en">No professional brand signal</li>
+                <li class="lang-en">Operational chaos for centers</li>
+
+                <li class="lang-ar">فقدان إيراد بسبب حضور غير منضبط</li>
+                <li class="lang-ar">مفيش تاريخ جلسات منظم</li>
+                <li class="lang-ar">مفيش صورة احترافية للمدرس/السنتر</li>
+                <li class="lang-ar">فوضى تشغيلية</li>
+              </ul>
+            </div>
+
+            <div class="p-4 rounded-2xl border border-base-300 bg-base-200/40">
+              <div class="font-semibold text-sm">
+                <span class="lang-en">Our Solution</span><span class="lang-ar">حلّنا</span>
+              </div>
+              <ul class="mt-2 text-sm opacity-85 list-disc list-inside space-y-1">
+                <li class="lang-en">One place for sessions, attendance, and roles</li>
+                <li class="lang-en">Parent visibility without extra work</li>
+                <li class="lang-en">Operational trust before payments</li>
+                <li class="lang-en">Scales from teacher → center → school</li>
+
+                <li class="lang-ar">مكان واحد للجلسات والحضور والصلاحيات</li>
+                <li class="lang-ar">رؤية لولي الأمر بدون مجهود إضافي</li>
+                <li class="lang-ar">ثقة تشغيلية قبل الدفع</li>
+                <li class="lang-ar">قابل للتوسع: مدرس → سنتر → مدرسة</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/30">
+            <div class="flex items-center justify-between">
+              <div class="font-semibold">
+                <span class="lang-en">Prototype Goal</span><span class="lang-ar">هدف البروتوتايب</span>
+              </div>
+              <span class="badge badge-success">
+                <span class="lang-en">Clarity > Perfection</span>
+                <span class="lang-ar">الوضوح أهم من الكمال</span>
+              </span>
+            </div>
+
+            <div class="mt-3 text-sm opacity-80 leading-relaxed">
+              <p class="lang-en">
+                The prototype is not about technical perfection. It’s about proving the workflow:
+                session scheduling → attendance capture → session completion → parent visibility → reporting.
+              </p>
+              <p class="lang-ar">
+                البروتوتايب مش هدفه الكمال التقني. الهدف إثبات الـ workflow:
+                جدولة جلسة → تسجيل حضور → إكمال جلسة → رؤية ولي الأمر → تقارير.
+              </p>
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="p-3 rounded-2xl border border-base-300 bg-base-100">
+                <div class="text-xs opacity-70 font-semibold">
+                  <span class="lang-en">North Star</span><span class="lang-ar">البوصلة</span>
+                </div>
+                <div class="font-bold mt-1">
+                  <span class="lang-en">Operational Trust</span><span class="lang-ar">ثقة تشغيلية</span>
+                </div>
+              </div>
+              <div class="p-3 rounded-2xl border border-base-300 bg-base-100">
+                <div class="text-xs opacity-70 font-semibold">
+                  <span class="lang-en">Value</span><span class="lang-ar">القيمة</span>
+                </div>
+                <div class="font-bold mt-1">
+                  <span class="lang-en">Consistency</span><span class="lang-ar">انتظام</span>
+                </div>
+              </div>
+              <div class="p-3 rounded-2xl border border-base-300 bg-base-100">
+                <div class="text-xs opacity-70 font-semibold">
+                  <span class="lang-en">Scale</span><span class="lang-ar">التوسع</span>
+                </div>
+                <div class="font-bold mt-1">
+                  <span class="lang-en">Teacher → Center</span><span class="lang-ar">مدرس → سنتر</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISION -->
+    <section id="vision" class="card-shell dens-pad p-6">
+      <div class="flex items-center justify-between dens-mb mb-4">
+        <h3 class="text-xl section-title flex items-center gap-2">
+          <span class="w-10 h-10 rounded-2xl bg-info/10 text-info flex items-center justify-center">
+            <i class="fas fa-binoculars"></i>
+          </span>
+          <span class="lang-en">Product Vision (Phased)</span>
+          <span class="lang-ar">رؤية المنتج (مراحل)</span>
+        </h3>
+        <span class="badge badge-outline border-base-300">
+          <span class="lang-en">Operations → Engagement → LMS</span>
+          <span class="lang-ar">تشغيل → تفاعل → LMS</span>
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 dens-gap gap-6">
+        <div class="p-5 rounded-2xl border border-base-300 bg-base-200/30">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs opacity-70 font-semibold">Phase 1</div>
+              <div class="text-lg font-bold">
+                <span class="lang-en">MVP (Operations First)</span>
+                <span class="lang-ar">MVP (تشغيل أولاً)</span>
+              </div>
+            </div>
+            <span class="badge badge-success">
+              <span class="lang-en">3–4 months</span><span class="lang-ar">3–4 شهور</span>
+            </span>
+          </div>
+
+          <ul class="mt-4 text-sm opacity-85 list-disc list-inside space-y-2">
+            <li class="lang-en">Class & session management</li>
+            <li class="lang-en">Live session tracking (without streaming)</li>
+            <li class="lang-en">Attendance (manual + assisted)</li>
+            <li class="lang-en">Student & parent dashboards</li>
+            <li class="lang-en">Teacher & center profiles</li>
+
+            <li class="lang-ar">إدارة الفصول والجلسات</li>
+            <li class="lang-ar">تتبع جلسة لايف (بدون بث)</li>
+            <li class="lang-ar">حضور (يدوي + مساعد)</li>
+            <li class="lang-ar">لوحات للطالب وولي الأمر</li>
+            <li class="lang-ar">ملفات المدرس/السنتر</li>
+          </ul>
+        </div>
+
+        <div class="p-5 rounded-2xl border border-base-300 bg-base-200/30">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs opacity-70 font-semibold">Phase 2</div>
+              <div class="text-lg font-bold">
+                <span class="lang-en">Engagement & Value</span>
+                <span class="lang-ar">تفاعل وقيمة</span>
+              </div>
+            </div>
+            <span class="badge badge-info">
+              <span class="lang-en">+3 months</span><span class="lang-ar">+3 شهور</span>
+            </span>
+          </div>
+
+          <ul class="mt-4 text-sm opacity-85 list-disc list-inside space-y-2">
+            <li class="lang-en">Materials upload</li>
+            <li class="lang-en">Session notes</li>
+            <li class="lang-en">Reports & insights</li>
+            <li class="lang-en">Parent notifications</li>
+
+            <li class="lang-ar">رفع مواد</li>
+            <li class="lang-ar">ملاحظات جلسة</li>
+            <li class="lang-ar">تقارير وإنسايتس</li>
+            <li class="lang-ar">إشعارات لولي الأمر</li>
+          </ul>
+        </div>
+
+        <div class="p-5 rounded-2xl border border-base-300 bg-base-200/30">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs opacity-70 font-semibold">Phase 3</div>
+              <div class="text-lg font-bold">
+                <span class="lang-en">LMS Evolution</span>
+                <span class="lang-ar">تحول LMS</span>
+              </div>
+            </div>
+            <span class="badge badge-warning">
+              <span class="lang-en">6+ months</span><span class="lang-ar">6+ شهور</span>
+            </span>
+          </div>
+
+          <ul class="mt-4 text-sm opacity-85 list-disc list-inside space-y-2">
+            <li class="lang-en">Integrated assessments</li>
+            <li class="lang-en">Advanced analytics</li>
+            <li class="lang-en">Certification & compliance</li>
+            <li class="lang-en">School-level features</li>
+
+            <li class="lang-ar">اختبارات مدمجة</li>
+            <li class="lang-ar">تحليلات متقدمة</li>
+            <li class="lang-ar">اعتماد ومعايير جودة</li>
+            <li class="lang-ar">خصائص المدارس</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- MVP SCOPE -->
+    <section id="scope" class="card-shell dens-pad p-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 dens-mb mb-4">
+        <h3 class="text-xl section-title flex items-center gap-2">
+          <span class="w-10 h-10 rounded-2xl bg-success/10 text-success flex items-center justify-center">
+            <i class="fas fa-list-check"></i>
+          </span>
+          <span class="lang-en">Phase 1 MVP Scope (What to build)</span>
+          <span class="lang-ar">نطاق الـ MVP (هنبني إيه)</span>
+        </h3>
+
+        <div class="flex flex-wrap gap-2">
+          <span class="badge badge-outline border-base-300">
+            <span class="lang-en">Prototype-ready</span><span class="lang-ar">جاهز كبروتوتايب</span>
+          </span>
+          <span class="badge badge-outline border-base-300">
+            <span class="lang-en">Ops workflow proof</span><span class="lang-ar">إثبات الـ workflow</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 dens-gap gap-6">
+        <!-- Modules -->
+        <div class="lg:col-span-7">
+          <div class="grid grid-cols-1 sm:grid-cols-2 dens-gap gap-4">
+            <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+              <div class="flex items-center justify-between">
+                <div class="font-bold">
+                  <span class="lang-en">1) Identity & Roles</span>
+                  <span class="lang-ar">1) الحسابات والصلاحيات</span>
+                </div>
+                <i class="fas fa-id-badge opacity-70"></i>
+              </div>
+              <ul class="mt-3 text-sm opacity-85 list-disc list-inside space-y-1">
+                <li class="lang-en">Admin / Teacher / Parent / Student roles</li>
+                <li class="lang-en">Center vs individual teacher profiles</li>
+                <li class="lang-en">Basic access control (prototype-level)</li>
+
+                <li class="lang-ar">مشرف / مدرس / ولي أمر / طالب</li>
+                <li class="lang-ar">ملف سنتر أو مدرس فردي</li>
+                <li class="lang-ar">تحكم صلاحيات أساسي</li>
+              </ul>
+            </div>
+
+            <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+              <div class="flex items-center justify-between">
+                <div class="font-bold">
+                  <span class="lang-en">2) Classes & Sessions</span>
+                  <span class="lang-ar">2) الفصول والجلسات</span>
+                </div>
+                <i class="fas fa-chalkboard-teacher opacity-70"></i>
+              </div>
+              <ul class="mt-3 text-sm opacity-85 list-disc list-inside space-y-1">
+                <li class="lang-en">Create class, schedule sessions</li>
+                <li class="lang-en">Session states (upcoming / live / done)</li>
+                <li class="lang-en">Teacher assignment, student lists</li>
+
+                <li class="lang-ar">إنشاء فصل وجدولة جلسات</li>
+                <li class="lang-ar">حالات الجلسة (قادم/جاري/تم)</li>
+                <li class="lang-ar">تعيين مدرس وقائمة طلاب</li>
+              </ul>
+            </div>
+
+            <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+              <div class="flex items-center justify-between">
+                <div class="font-bold">
+                  <span class="lang-en">3) Attendance</span>
+                  <span class="lang-ar">3) الحضور</span>
+                </div>
+                <i class="fas fa-user-check opacity-70"></i>
+              </div>
+              <ul class="mt-3 text-sm opacity-85 list-disc list-inside space-y-1">
+                <li class="lang-en">Manual attendance capture</li>
+                <li class="lang-en">Assisted options (imports / quick toggles)</li>
+                <li class="lang-en">Attendance history per student</li>
+
+                <li class="lang-ar">تسجيل حضور يدوي</li>
+                <li class="lang-ar">خيارات مساعدة (استيراد/تبديل سريع)</li>
+                <li class="lang-ar">سجل حضور لكل طالب</li>
+              </ul>
+            </div>
+
+            <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+              <div class="flex items-center justify-between">
+                <div class="font-bold">
+                  <span class="lang-en">4) Dashboards</span>
+                  <span class="lang-ar">4) لوحات تحكم</span>
+                </div>
+                <i class="fas fa-chart-line opacity-70"></i>
+              </div>
+              <ul class="mt-3 text-sm opacity-85 list-disc list-inside space-y-1">
+                <li class="lang-en">Admin overview KPIs</li>
+                <li class="lang-en">Teacher view (sessions + attendance)</li>
+                <li class="lang-en">Parent view (visibility + history)</li>
+
+                <li class="lang-ar">نظرة عامة للمشرف</li>
+                <li class="lang-ar">واجهة مدرس (جلسات + حضور)</li>
+                <li class="lang-ar">واجهة ولي الأمر (رؤية + سجل)</li>
+              </ul>
+            </div>
+
+            <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25 sm:col-span-2">
+              <div class="flex items-center justify-between">
+                <div class="font-bold">
+                  <span class="lang-en">5) Reports (Basic)</span>
+                  <span class="lang-ar">5) تقارير (أساسية)</span>
+                </div>
+                <i class="fas fa-file-lines opacity-70"></i>
+              </div>
+              <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="p-3 rounded-2xl border border-base-300 bg-base-100">
+                  <div class="text-xs opacity-70 font-semibold">
+                    <span class="lang-en">Attendance</span><span class="lang-ar">الحضور</span>
+                  </div>
+                  <div class="font-semibold mt-1 text-sm">
+                    <span class="lang-en">By class / by session</span><span class="lang-ar">حسب الفصل/الجلسة</span>
+                  </div>
+                </div>
+                <div class="p-3 rounded-2xl border border-base-300 bg-base-100">
+                  <div class="text-xs opacity-70 font-semibold">
+                    <span class="lang-en">Sessions</span><span class="lang-ar">الجلسات</span>
+                  </div>
+                  <div class="font-semibold mt-1 text-sm">
+                    <span class="lang-en">Completion & history</span><span class="lang-ar">إكمال وسجل</span>
+                  </div>
+                </div>
+                <div class="p-3 rounded-2xl border border-base-300 bg-base-100">
+                  <div class="text-xs opacity-70 font-semibold">
+                    <span class="lang-en">Students</span><span class="lang-ar">الطلاب</span>
+                  </div>
+                  <div class="font-semibold mt-1 text-sm">
+                    <span class="lang-en">Visibility & status</span><span class="lang-ar">حالة ورؤية</span>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 text-sm opacity-80 leading-relaxed">
+                <span class="lang-en">Note: Premium insights are Phase 2. Phase 1 proves the workflow and data capture.</span>
+                <span class="lang-ar">ملحوظة: الإنسايتس المدفوعة في المرحلة 2. المرحلة 1 هدفها إثبات workflow وتجميع بيانات.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- In/Out -->
+        <div class="lg:col-span-5">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/30">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold">
+                <span class="lang-en">Scope Guardrails</span><span class="lang-ar">حدود النطاق</span>
+              </h4>
+              <span class="badge badge-outline border-base-300">
+                <span class="lang-en">keep MVP lean</span><span class="lang-ar">MVP خفيف</span>
+              </span>
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 gap-3">
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="flex items-center gap-2 font-semibold">
+                  <span class="w-9 h-9 rounded-2xl bg-success/10 text-success flex items-center justify-center">
+                    <i class="fas fa-check"></i>
+                  </span>
+                  <span class="lang-en">In Scope (Phase 1)</span><span class="lang-ar">داخل النطاق (مرحلة 1)</span>
+                </div>
+                <ul class="mt-3 text-sm opacity-85 list-disc list-inside space-y-1">
+                  <li class="lang-en">Sessions + attendance + roles</li>
+                  <li class="lang-en">Dashboards for key personas</li>
+                  <li class="lang-en">Basic reports + exports</li>
+                  <li class="lang-en">Microsoft “integration-first” approach</li>
+
+                  <li class="lang-ar">جلسات + حضور + صلاحيات</li>
+                  <li class="lang-ar">لوحات للأطراف الأساسية</li>
+                  <li class="lang-ar">تقارير وتصدير أساسي</li>
+                  <li class="lang-ar">تكامل مايكروسوفت كأساس</li>
+                </ul>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="flex items-center gap-2 font-semibold">
+                  <span class="w-9 h-9 rounded-2xl bg-error/10 text-error flex items-center justify-center">
+                    <i class="fas fa-xmark"></i>
+                  </span>
+                  <span class="lang-en">Out of Scope (Phase 1)</span><span class="lang-ar">خارج النطاق (مرحلة 1)</span>
+                </div>
+                <ul class="mt-3 text-sm opacity-85 list-disc list-inside space-y-1">
+                  <li class="lang-en">Payments, billing, invoices (deliberately delayed)</li>
+                  <li class="lang-en">Embedded video streaming / full LMS</li>
+                  <li class="lang-en">Advanced analytics + assessments</li>
+
+                  <li class="lang-ar">دفع وفواتير (متأجلين عمداً)</li>
+                  <li class="lang-ar">بث فيديو داخل المنصة / LMS كامل</li>
+                  <li class="lang-ar">تحليلات متقدمة واختبارات</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mt-4 p-4 rounded-2xl border border-base-300 bg-warning/10">
+              <div class="font-semibold flex items-center gap-2">
+                <i class="fas fa-lightbulb text-warning"></i>
+                <span class="lang-en">Prototype Note</span><span class="lang-ar">ملاحظة بروتوتايب</span>
+              </div>
+              <p class="mt-2 text-sm opacity-80 leading-relaxed">
+                <span class="lang-en">
+                  If needed, we can “simulate” integrations (fake data + flows) to validate the product story fast.
+                </span>
+                <span class="lang-ar">
+                  لو احتجنا، نقدر “نحاكي” التكاملات (داتا وهمية + تدفقات) علشان نثبت القصة بسرعة.
+                </span>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MICROSOFT -->
+    <section id="microsoft" class="card-shell dens-pad p-6">
+      <div class="flex items-center justify-between dens-mb mb-4">
+        <h3 class="text-xl section-title flex items-center gap-2">
+          <span class="w-10 h-10 rounded-2xl bg-base-200 text-base-content flex items-center justify-center">
+            <i class="fab fa-microsoft"></i>
+          </span>
+          <span class="lang-en">Why Microsoft Ecosystem (Integration-first)</span>
+          <span class="lang-ar">لماذا منظومة مايكروسوفت (تكامل أولاً)</span>
+        </h3>
+        <span class="badge badge-outline border-base-300">
+          <span class="lang-en">Lower infra + faster execution</span><span class="lang-ar">أسرع وأقل تكلفة</span>
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 dens-gap gap-6">
+        <div class="lg:col-span-7">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+            <p class="text-sm opacity-80 leading-relaxed">
+              <span class="lang-en">
+                LeJaClasses integrates with Microsoft tools instead of competing. This reduces infrastructure burden,
+                increases trust, and accelerates delivery.
+              </span>
+              <span class="lang-ar">
+                LeJaClasses بتتكامل مع أدوات مايكروسوفت بدل ما تنافسها: ده يقلل البنية التحتية، ويزود الثقة، ويسرّع التنفيذ.
+              </span>
+            </p>
+
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold flex items-center gap-2">
+                  <i class="fab fa-microsoft-teams opacity-80"></i>
+                  <span class="lang-en">Microsoft Teams</span><span class="lang-ar">Microsoft Teams</span>
+                </div>
+                <p class="mt-2 text-sm opacity-80">
+                  <span class="lang-en">Live sessions “join link” + tracking without building streaming.</span>
+                  <span class="lang-ar">روابط حضور للجلسات وتتبع بدون بناء بث.</span>
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold flex items-center gap-2">
+                  <i class="fas fa-list-check opacity-80"></i>
+                  <span class="lang-en">Microsoft Forms</span><span class="lang-ar">Microsoft Forms</span>
+                </div>
+                <p class="mt-2 text-sm opacity-80">
+                  <span class="lang-en">Attendance/quizzes quickly, synced to session records.</span>
+                  <span class="lang-ar">حضور/اختبارات بسرعة وربطها بسجل الجلسة.</span>
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold flex items-center gap-2">
+                  <i class="fas fa-gears opacity-80"></i>
+                  <span class="lang-en">Power Automate</span><span class="lang-ar">Power Automate</span>
+                </div>
+                <p class="mt-2 text-sm opacity-80">
+                  <span class="lang-en">Notifications & workflows without custom backend complexity.</span>
+                  <span class="lang-ar">إشعارات وتدفقات بدون تعقيد باك-إند كبير.</span>
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold flex items-center gap-2">
+                  <i class="fas fa-chart-pie opacity-80"></i>
+                  <span class="lang-en">Analytics (future)</span><span class="lang-ar">Analytics (مستقبلاً)</span>
+                </div>
+                <p class="mt-2 text-sm opacity-80">
+                  <span class="lang-en">Standardized data enables insights and premium reporting later.</span>
+                  <span class="lang-ar">توحيد الداتا يفتح باب الإنسايتس والتقارير المدفوعة.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/30">
+            <div class="font-bold flex items-center justify-between">
+              <span class="lang-en">Key Outcome</span><span class="lang-ar">النتيجة الأساسية</span>
+              <span class="badge badge-success">
+                <span class="lang-en">Enterprise-grade trust</span><span class="lang-ar">ثقة بمستوى مؤسسي</span>
+              </span>
+            </div>
+
+            <div class="mt-3 text-sm opacity-80 leading-relaxed">
+              <p class="lang-en">
+                Integration-first means faster MVP, fewer moving parts, and a stronger “trust” story for teachers,
+                parents, and later schools.
+              </p>
+              <p class="lang-ar">
+                التكامل أولاً يعني MVP أسرع، أجزاء أقل، وقصة ثقة أقوى للمدرس وولي الأمر ثم المدارس.
+              </p>
+            </div>
+
+            <div class="mt-4 p-4 rounded-2xl border border-base-300 bg-base-100">
+              <div class="text-xs opacity-70 font-semibold">
+                <span class="lang-en">Prototype approach</span><span class="lang-ar">منهج البروتوتايب</span>
+              </div>
+              <div class="mt-2 text-sm opacity-85 leading-relaxed">
+                <p class="lang-en">We can start with “links + events + logs”, then deepen integrations as needed.</p>
+                <p class="lang-ar">نبدأ بـ “روابط + أحداث + سجل”، وبعدها نعمّق التكامل تدريجيًا.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MONETIZATION -->
+    <section id="monetization" class="card-shell dens-pad p-6">
+      <div class="flex items-center justify-between dens-mb mb-4">
+        <h3 class="text-xl section-title flex items-center gap-2">
+          <span class="w-10 h-10 rounded-2xl bg-warning/10 text-warning flex items-center justify-center">
+            <i class="fas fa-coins"></i>
+          </span>
+          <span class="lang-en">Monetization Philosophy</span>
+          <span class="lang-ar">فلسفة تحقيق الدخل</span>
+        </h3>
+        <span class="badge badge-outline border-base-300">
+          <span class="lang-en">Operations & Trust, not content</span>
+          <span class="lang-ar">تشغيل وثقة، مش محتوى</span>
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 dens-gap gap-6">
+        <div class="lg:col-span-7">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+            <h4 class="font-bold">
+              <span class="lang-en">Phase 1 (MVP): Subscriptions only</span>
+              <span class="lang-ar">المرحلة 1 (MVP): اشتراكات فقط</span>
+            </h4>
+
+            <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="text-xs opacity-70 font-semibold">
+                  <span class="lang-en">Individual teacher</span><span class="lang-ar">مدرس فردي</span>
+                </div>
+                <div class="mt-1 text-lg font-bold">$10–15<span class="text-sm opacity-70 font-semibold">/mo</span></div>
+                <p class="mt-2 text-sm opacity-80">
+                  <span class="lang-en">Ops tools + basic reporting.</span>
+                  <span class="lang-ar">أدوات تشغيل + تقارير أساسية.</span>
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="text-xs opacity-70 font-semibold">
+                  <span class="lang-en">Small center</span><span class="lang-ar">سنتر صغير</span>
+                </div>
+                <div class="mt-1 text-lg font-bold">$40–60<span class="text-sm opacity-70 font-semibold">/mo</span></div>
+                <p class="mt-2 text-sm opacity-80">
+                  <span class="lang-en">Multi-teacher, classes, role management.</span>
+                  <span class="lang-ar">عدة مدرسين، فصول، وإدارة صلاحيات.</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-4 p-4 rounded-2xl border border-base-300 bg-success/10">
+              <div class="font-semibold flex items-center gap-2">
+                <i class="fas fa-check text-success"></i>
+                <span class="lang-en">Payments are deliberately delayed</span>
+                <span class="lang-ar">الدفع متأجل عمداً</span>
+              </div>
+              <p class="mt-2 text-sm opacity-80 leading-relaxed">
+                <span class="lang-en">
+                  We introduce payments only when attendance is reliable, sessions are habitual, and parents trust the platform.
+                </span>
+                <span class="lang-ar">
+                  ندخل الدفع لما الحضور يبقى مضبوط، والجلسات تبقى عادة، وولي الأمر يثق في المنصة.
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/30">
+            <h4 class="font-bold flex items-center justify-between">
+              <span class="lang-en">Certification Layer</span>
+              <span class="lang-ar">طبقة الاعتماد</span>
+              <span class="badge badge-warning">
+                <span class="lang-en">Phase 2+</span><span class="lang-ar">مرحلة 2+</span>
+              </span>
+            </h4>
+
+            <p class="mt-3 text-sm opacity-80 leading-relaxed">
+              <span class="lang-en">
+                “LeJa Certified Educator / Center” is not a badge — it’s quality criteria based on operational consistency.
+              </span>
+              <span class="lang-ar">
+                “LeJa Certified Educator / Center” مش مجرد بادج—ده معايير جودة مبنية على الانتظام.
+              </span>
+            </p>
+
+            <div class="mt-4 p-4 rounded-2xl border border-base-300 bg-base-100">
+              <div class="text-xs opacity-70 font-semibold">
+                <span class="lang-en">Potential criteria</span><span class="lang-ar">معايير محتملة</span>
+              </div>
+              <ul class="mt-2 text-sm opacity-85 list-disc list-inside space-y-1">
+                <li class="lang-en">Attendance consistency</li>
+                <li class="lang-en">Session completion</li>
+                <li class="lang-en">Parent satisfaction</li>
+                <li class="lang-en">Content standards (later)</li>
+
+                <li class="lang-ar">انتظام الحضور</li>
+                <li class="lang-ar">إكمال الجلسات</li>
+                <li class="lang-ar">رضا أولياء الأمور</li>
+                <li class="lang-ar">معايير محتوى (لاحقاً)</li>
+              </ul>
+            </div>
+
+            <div class="mt-4 p-4 rounded-2xl border border-base-300 bg-base-100">
+              <div class="text-xs opacity-70 font-semibold">
+                <span class="lang-en">Future monetization</span><span class="lang-ar">دخل مستقبلي</span>
+              </div>
+              <ul class="mt-2 text-sm opacity-85 list-disc list-inside space-y-1">
+                <li class="lang-en">Premium positioning</li>
+                <li class="lang-en">Certification-based monetization</li>
+                <li class="lang-en">Teacher upskilling programs</li>
+
+                <li class="lang-ar">تمييز وتسعير أعلى</li>
+                <li class="lang-ar">دخل من الاعتماد</li>
+                <li class="lang-ar">برامج تطوير المدرسين</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section id="timeline" class="card-shell dens-pad p-6">
+      <div class="flex items-center justify-between dens-mb mb-4">
+        <h3 class="text-xl section-title flex items-center gap-2">
+          <span class="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+            <i class="fas fa-clock"></i>
+          </span>
+          <span class="lang-en">Timeline & Cost Logic</span>
+          <span class="lang-ar">المدة والتكلفة</span>
+        </h3>
+        <span class="badge badge-outline border-base-300">
+          <span class="lang-en">Lean MVP</span><span class="lang-ar">MVP خفيف</span>
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 dens-gap gap-6">
+        <div class="lg:col-span-7">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+            <div class="overflow-x-auto">
+              <table class="table w-full">
+                <thead>
+                <tr>
+                  <th><span class="lang-en">Phase</span><span class="lang-ar">المرحلة</span></th>
+                  <th><span class="lang-en">Duration</span><span class="lang-ar">المدة</span></th>
+                  <th><span class="lang-en">Focus</span><span class="lang-ar">التركيز</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td class="font-semibold">Phase 1</td>
+                  <td><span class="badge badge-success">3–4 months</span></td>
+                  <td class="opacity-85">
+                    <span class="lang-en">Core operations + integrations + dashboards</span>
+                    <span class="lang-ar">عمليات أساسية + تكاملات + لوحات</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-semibold">Phase 2</td>
+                  <td><span class="badge badge-info">~3 months</span></td>
+                  <td class="opacity-85">
+                    <span class="lang-en">Engagement features + reporting</span>
+                    <span class="lang-ar">تفاعل + تقارير</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-semibold">Phase 3</td>
+                  <td><span class="badge badge-warning">6+ months</span></td>
+                  <td class="opacity-85">
+                    <span class="lang-en">LMS-grade features + schools</span>
+                    <span class="lang-ar">خصائص LMS + مدارس</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-4 p-4 rounded-2xl border border-base-300 bg-base-100">
+              <div class="font-semibold flex items-center justify-between">
+                <span class="lang-en">Estimated MVP build (outsourced)</span>
+                <span class="lang-ar">تقدير تكلفة الـ MVP (تنفيذ خارجي)</span>
+                <span class="badge badge-outline border-base-300">
+                  <span class="lang-en">Low 5-figures USD</span><span class="lang-ar">بداية 5 أرقام دولار</span>
+                </span>
+              </div>
+              <p class="mt-2 text-sm opacity-80 leading-relaxed">
+                <span class="lang-en">
+                  Cost stays controlled by integrating with Microsoft and avoiding unnecessary infrastructure early.
+                </span>
+                <span class="lang-ar">
+                  بنسيطر على التكلفة بالتكامل مع مايكروسوفت وتجنب بنية تحتية غير ضرورية بدري.
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/30">
+            <h4 class="font-bold">
+              <span class="lang-en">Delivery Structure (Partner-friendly)</span>
+              <span class="lang-ar">شكل التسليم (مناسب للشريك)</span>
+            </h4>
+
+            <div class="mt-4 space-y-3">
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold flex items-center gap-2">
+                  <i class="fas fa-clipboard-list opacity-70"></i>
+                  <span class="lang-en">1) Scope freeze (MVP)</span><span class="lang-ar">1) تثبيت النطاق</span>
+                </div>
+                <p class="mt-2 text-sm opacity-80">
+                  <span class="lang-en">Agree on MVP modules and explicitly delay payments and LMS features.</span>
+                  <span class="lang-ar">الاتفاق على Modules وتأجيل الدفع وخصائص LMS بوضوح.</span>
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold flex items-center gap-2">
+                  <i class="fas fa-diagram-project opacity-70"></i>
+                  <span class="lang-en">2) Prototype flows</span><span class="lang-ar">2) تدفقات البروتوتايب</span>
+                </div>
+                <p class="mt-2 text-sm opacity-80">
+                  <span class="lang-en">Build a clickable demo + data story to validate the workflow.</span>
+                  <span class="lang-ar">بناء Demo قابل للتصفح + قصة الداتا لإثبات الـ workflow.</span>
+                </p>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold flex items-center gap-2">
+                  <i class="fas fa-rocket opacity-70"></i>
+                  <span class="lang-en">3) MVP delivery</span><span class="lang-ar">3) تسليم الـ MVP</span>
+                </div>
+                <p class="mt-2 text-sm opacity-80">
+                  <span class="lang-en">Incremental releases: Admin → Teacher → Parent.</span>
+                  <span class="lang-ar">إصدارات تدريجية: Admin → Teacher → Parent.</span>
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RISKS -->
+    <section id="risks" class="card-shell dens-pad p-6">
+      <div class="flex items-center justify-between dens-mb mb-4">
+        <h3 class="text-xl section-title flex items-center gap-2">
+          <span class="w-10 h-10 rounded-2xl bg-error/10 text-error flex items-center justify-center">
+            <i class="fas fa-shield-halved"></i>
+          </span>
+          <span class="lang-en">Risks & Assumptions</span>
+          <span class="lang-ar">المخاطر والافتراضات</span>
+        </h3>
+        <span class="badge badge-outline border-base-300">
+          <span class="lang-en">Managed by roadmap</span><span class="lang-ar">بتتدار بالخطة</span>
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 dens-gap gap-6">
+        <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+          <div class="font-bold flex items-center gap-2">
+            <i class="fas fa-user-group opacity-70"></i>
+            <span class="lang-en">Adoption risk</span><span class="lang-ar">مخاطر التبني</span>
+          </div>
+          <p class="mt-2 text-sm opacity-80 leading-relaxed">
+            <span class="lang-en">We avoid behavior change: we organize what already happens (sessions + attendance).</span>
+            <span class="lang-ar">بنقلل تغيير السلوك: بننظم الموجود (جلسات + حضور).</span>
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+          <div class="font-bold flex items-center gap-2">
+            <i class="fas fa-scale-balanced opacity-70"></i>
+            <span class="lang-en">Payment/legal complexity</span><span class="lang-ar">تعقيد الدفع/القانون</span>
+          </div>
+          <p class="mt-2 text-sm opacity-80 leading-relaxed">
+            <span class="lang-en">Deliberately delayed until trust is proven and usage is habitual.</span>
+            <span class="lang-ar">متأجل عمداً لحد ما الثقة والاستخدام يثبتوا.</span>
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+          <div class="font-bold flex items-center gap-2">
+            <i class="fas fa-code opacity-70"></i>
+            <span class="lang-en">Outsourced execution risk</span><span class="lang-ar">مخاطر التنفيذ الخارجي</span>
+          </div>
+          <p class="mt-2 text-sm opacity-80 leading-relaxed">
+            <span class="lang-en">Defensibility comes from process ownership, roadmap control, and certification logic.</span>
+            <span class="lang-ar">القوة في ملكية العمليات، التحكم في الروودماب، ومنطق الاعتماد.</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEXT STEPS -->
+    <section id="next-steps" class="card-shell dens-pad p-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 dens-mb mb-4">
+        <h3 class="text-xl section-title flex items-center gap-2">
+          <span class="w-10 h-10 rounded-2xl bg-success/10 text-success flex items-center justify-center">
+            <i class="fas fa-flag-checkered"></i>
+          </span>
+          <span class="lang-en">Next Steps (Partner Meeting Ready)</span>
+          <span class="lang-ar">الخطوات القادمة (جاهزة للاجتماع)</span>
+        </h3>
+
+        <span class="badge badge-success">
+          <span class="lang-en">Decision-oriented</span><span class="lang-ar">موجهة لاتخاذ قرار</span>
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 dens-gap gap-6">
+        <div class="lg:col-span-7">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/25">
+            <ol class="list-decimal list-inside text-sm opacity-85 space-y-3">
+              <li>
+                <span class="font-semibold">
+                  <span class="lang-en">Align on MVP scope</span><span class="lang-ar">اتفاق على نطاق الـ MVP</span>
+                </span>
+                <div class="mt-1 opacity-80">
+                  <span class="lang-en">Freeze Phase 1 modules + confirm what is explicitly delayed.</span>
+                  <span class="lang-ar">تثبيت Modules المرحلة 1 + تأكيد المؤجل بوضوح.</span>
+                </div>
+              </li>
+
+              <li>
+                <span class="font-semibold">
+                  <span class="lang-en">Agree on prototype success criteria</span><span class="lang-ar">معايير نجاح البروتوتايب</span>
+                </span>
+                <div class="mt-1 opacity-80">
+                  <span class="lang-en">Prove the workflow end-to-end (session → attendance → parent view → report).</span>
+                  <span class="lang-ar">إثبات السلسلة كاملة (جلسة → حضور → ولي أمر → تقرير).</span>
+                </div>
+              </li>
+
+              <li>
+                <span class="font-semibold">
+                  <span class="lang-en">Execution plan</span><span class="lang-ar">خطة التنفيذ</span>
+                </span>
+                <div class="mt-1 opacity-80">
+                  <span class="lang-en">Timeline, milestones, demo checkpoints, and handover package.</span>
+                  <span class="lang-ar">المدة، المعالم، نقاط مراجعة، وحزمة تسليم.</span>
+                </div>
+              </li>
+            </ol>
+
+            <div class="mt-5 flex flex-wrap gap-3">
+              <button class="btn btn-primary focus-ring" onclick="openModal('proposalModal')">
+                <i class="fas fa-file-signature"></i>
+                <span class="lang-en">Request Proposal Outline</span><span class="lang-ar">طلب مخطط عرض</span>
+              </button>
+              <button class="btn btn-outline border-base-300 focus-ring" onclick="openModal('workshopModal')">
+                <i class="fas fa-calendar-check"></i>
+                <span class="lang-en">Book a 60-min Workshop</span><span class="lang-ar">احجز ورشة 60 دقيقة</span>
+              </button>
+              <button class="btn btn-ghost focus-ring" onclick="copyMeetingAgenda()">
+                <i class="fas fa-copy"></i>
+                <span class="lang-en">Copy Meeting Agenda</span><span class="lang-ar">نسخ أجندة الاجتماع</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="p-5 rounded-2xl border border-base-300 bg-base-200/30">
+            <h4 class="font-bold">
+              <span class="lang-en">One-slide summary (talking points)</span>
+              <span class="lang-ar">ملخص سريع (نِقط كلام)</span>
+            </h4>
+
+            <div class="mt-4 space-y-3 text-sm opacity-85">
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold"><span class="lang-en">Problem</span><span class="lang-ar">المشكلة</span></div>
+                <div class="mt-1 opacity-80"><span class="lang-en">Ops chaos across tools; no trust layer.</span><span class="lang-ar">فوضى تشغيلية ومفيش طبقة ثقة.</span></div>
+              </div>
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold"><span class="lang-en">Solution</span><span class="lang-ar">الحل</span></div>
+                <div class="mt-1 opacity-80"><span class="lang-en">Sessions + attendance + visibility → trust.</span><span class="lang-ar">جلسات + حضور + رؤية → ثقة.</span></div>
+              </div>
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold"><span class="lang-en">Why now</span><span class="lang-ar">ليه دلوقتي</span></div>
+                <div class="mt-1 opacity-80"><span class="lang-en">Market already uses tools; we unify and standardize.</span><span class="lang-ar">السوق بيستخدم أدوات؛ إحنا نوحّد وننظم.</span></div>
+              </div>
+              <div class="p-4 rounded-2xl border border-base-300 bg-base-100">
+                <div class="font-semibold"><span class="lang-en">Moat</span><span class="lang-ar">القوة</span></div>
+                <div class="mt-1 opacity-80"><span class="lang-en">Process + certification + roadmap control.</span><span class="lang-ar">عملية + اعتماد + تحكم في الروودماب.</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="pb-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 opacity-75 text-sm">
+          <div>
+            <span class="lang-en">© 2026 LeJaClasses — Partner Demo Pack.</span>
+            <span class="lang-ar">© 2026 LeJaClasses — صفحة عرض للشريك.</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="badge badge-outline border-base-300">
+              <span class="lang-en">Prototype mode</span><span class="lang-ar">وضع بروتوتايب</span>
+            </span>
+            <span class="badge badge-outline border-base-300">
+              <span class="lang-en">Light/Dark + EN/AR + Density ready</span>
+              <span class="lang-ar">لايت/دارك + عربي/إنجليزي + مسافات شغالة</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- MODALS -->
+  <dialog id="proposalModal" class="modal">
+    <div class="modal-box card-shell">
+      <h3 class="font-bold text-lg">
+        <span class="lang-en">Proposal Outline (Prototype)</span>
+        <span class="lang-ar">مخطط عرض (بروتوتايب)</span>
+      </h3>
+      <p class="py-3 text-sm opacity-80 leading-relaxed">
+        <span class="lang-en">
+          This is a suggested outline you can share with an execution company to keep scope clean and delivery fast.
+        </span>
+        <span class="lang-ar">
+          ده مخطط تقترحه لشركة التنفيذ علشان النطاق يبقى واضح والتسليم سريع.
+        </span>
+      </p>
+
+      <div class="p-4 rounded-2xl border border-base-300 bg-base-200/30 text-sm opacity-85 leading-relaxed">
+        <ol class="list-decimal list-inside space-y-2">
+          <li><b>MVP modules:</b> roles, classes/sessions, attendance, dashboards, basic reports</li>
+          <li><b>Integrations:</b> Teams links + Forms attendance + optional Power Automate triggers</li>
+          <li><b>Milestones:</b> clickable prototype → alpha → beta → handover</li>
+          <li><b>Out of scope:</b> payments, billing, embedded streaming, full LMS</li>
+          <li><b>Handover:</b> documentation, environments, admin guide</li>
+        </ol>
+      </div>
+
+      <div class="modal-action">
+        <form method="dialog">
+          <button class="btn btn-primary focus-ring"><span class="lang-en">Close</span><span class="lang-ar">إغلاق</span></button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="workshopModal" class="modal">
+    <div class="modal-box card-shell">
+      <h3 class="font-bold text-lg">
+        <span class="lang-en">60-min Workshop Agenda</span>
+        <span class="lang-ar">أجندة ورشة 60 دقيقة</span>
+      </h3>
+      <div class="mt-3 p-4 rounded-2xl border border-base-300 bg-base-200/30 text-sm opacity-85 leading-relaxed">
+        <ul class="list-disc list-inside space-y-2">
+          <li><span class="lang-en">10 min – Problem + target users (teachers/centers/parents)</span><span class="lang-ar">10 د – المشكلة والمستخدمين</span></li>
+          <li><span class="lang-en">15 min – Walkthrough MVP workflow (session → attendance → parent)</span><span class="lang-ar">15 د – استعراض الـ workflow</span></li>
+          <li><span class="lang-en">15 min – Scope finalization + out-of-scope confirmation</span><span class="lang-ar">15 د – تثبيت النطاق والمؤجل</span></li>
+          <li><span class="lang-en">10 min – Timeline, milestones, and delivery approach</span><span class="lang-ar">10 د – المدة والتسليم</span></li>
+          <li><span class="lang-en">10 min – Next steps and ownership</span><span class="lang-ar">10 د – الخطوات القادمة والمالكين</span></li>
+        </ul>
+      </div>
+
+      <div class="modal-action">
+        <form method="dialog">
+          <button class="btn btn-primary focus-ring"><span class="lang-en">Close</span><span class="lang-ar">إغلاق</span></button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- SCRIPTS -->
+  <script>
+    // ===== Helpers =====
+    const root = document.documentElement;
+    const body = document.body;
+
+    function getSaved(key, fallback=null){
+      try{ return localStorage.getItem(key) ?? fallback; }catch(e){ return fallback; }
+    }
+    function setSaved(key, value){
+      try{ localStorage.setItem(key, value); }catch(e){}
+    }
+
+    // ===== Theme (DaisyUI built-in: light/dark) =====
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+
+    function setTheme(theme){
+      root.setAttribute("data-theme", theme);
+      setSaved("leja_partner_theme", theme);
+      themeIcon.className = theme === "light" ? "fas fa-moon text-lg" : "fas fa-sun text-lg";
+    }
+
+    function initTheme(){
+      const saved = getSaved("leja_partner_theme");
+      if(saved === "light" || saved === "dark"){
+        setTheme(saved);
+        return;
+      }
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setTheme(prefersDark ? "dark" : "light");
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const now = root.getAttribute("data-theme") || "light";
+      setTheme(now === "light" ? "dark" : "light");
+    });
+
+    // ===== Language (EN/AR) + direction switching =====
+    const setEN = document.getElementById("setEN");
+    const setAR = document.getElementById("setAR");
+
+    function setLanguage(lang){
+      body.setAttribute("data-lang", lang);
+      setSaved("leja_partner_lang", lang);
+
+      if(lang === "ar"){
+        document.documentElement.setAttribute("lang", "ar");
+        document.documentElement.setAttribute("dir", "rtl");
+      }else{
+        document.documentElement.setAttribute("lang", "en");
+        document.documentElement.setAttribute("dir", "ltr");
+      }
+
+      // Align text based on direction (simple prototype)
+      const isRTL = (lang === "ar");
+      document.querySelectorAll(".auto-align").forEach(el => {
+        el.classList.toggle("text-right", isRTL);
+        el.classList.toggle("text-left", !isRTL);
+      });
+    }
+
+    setEN.addEventListener("click", () => setLanguage("en"));
+    setAR.addEventListener("click", () => setLanguage("ar"));
+
+    function initLanguage(){
+      const saved = getSaved("leja_partner_lang");
+      if(saved === "ar" || saved === "en"){ setLanguage(saved); return; }
+      // default EN for partner page
+      setLanguage("en");
+    }
+
+    // ===== Density (Compact / Comfortable) =====
+    const densComfort = document.getElementById("densComfort");
+    const densCompact = document.getElementById("densCompact");
+
+    function setDensity(mode){
+      body.setAttribute("data-density", mode);
+      setSaved("leja_partner_density", mode);
+    }
+
+    densComfort.addEventListener("click", () => setDensity("comfortable"));
+    densCompact.addEventListener("click", () => setDensity("compact"));
+
+    function initDensity(){
+      const saved = getSaved("leja_partner_density");
+      setDensity(saved === "compact" ? "compact" : "comfortable");
+    }
+
+    // ===== Modals =====
+    function openModal(id){
+      const dlg = document.getElementById(id);
+      if(dlg && typeof dlg.showModal === "function"){ dlg.showModal(); }
+    }
+    window.openModal = openModal;
+
+    // ===== Copy agenda =====
+    function copyMeetingAgenda(){
+      const lang = body.getAttribute("data-lang") || "en";
+      const text = (lang === "ar")
+        ? `أجندة اجتماع LeJaClasses (60 دقيقة):
+1) المشكلة والمستخدمين (10 د)
+2) استعراض الـ workflow: جلسة → حضور → ولي أمر → تقرير (15 د)
+3) تثبيت نطاق الـ MVP وما هو مؤجل (15 د)
+4) المدة والمعالم وطريقة التسليم (10 د)
+5) الخطوات القادمة والمسؤوليات (10 د)`
+        : `LeJaClasses Meeting Agenda (60 min):
+1) Problem + users (10m)
+2) MVP workflow walkthrough: session → attendance → parent view → report (15m)
+3) Scope freeze + out-of-scope confirmation (15m)
+4) Timeline + milestones + delivery approach (10m)
+5) Next steps + ownership (10m)`;
+
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(() => {
+          toast(lang === "ar" ? "تم نسخ الأجندة ✅" : "Agenda copied ✅");
+        }).catch(() => {
+          fallbackCopy(text);
+        });
+      }else{
+        fallbackCopy(text);
+      }
+    }
+    window.copyMeetingAgenda = copyMeetingAgenda;
+
+    function fallbackCopy(text){
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try{ document.execCommand("copy"); toast("Copied ✅"); }catch(e){ toast("Copy failed"); }
+      document.body.removeChild(ta);
+    }
+
+    // ===== Simple toast =====
+    function toast(message){
+      const el = document.createElement("div");
+      el.className = "toast toast-top toast-center z-[9999]";
+      el.innerHTML = `
+        <div class="alert alert-success shadow-lg border border-base-300">
+          <span class="font-semibold">${message}</span>
+        </div>
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => { el.remove(); }, 1800);
+    }
+
+    // ===== TOC highlight on scroll =====
+    const sections = ["problem","vision","scope","microsoft","monetization","timeline","risks","next-steps"]
+      .map(id => document.getElementById(id)).filter(Boolean);
+
+    function markActiveTOC(){
+      const y = window.scrollY + 140;
+      let currentId = sections[0]?.id;
+      for(const s of sections){
+        if(s.offsetTop <= y) currentId = s.id;
+      }
+      document.querySelectorAll(".toc a").forEach(a => {
+        const href = a.getAttribute("href") || "";
+        const isActive = href === "#" + currentId;
+        a.classList.toggle("active", isActive);
+      });
+    }
+
+    // ===== Init =====
+    document.addEventListener("DOMContentLoaded", () => {
+      initTheme();
+      initLanguage();
+      initDensity();
+      markActiveTOC();
+      window.addEventListener("scroll", markActiveTOC, { passive: true });
+    });
+  </script>
+</body>
+</html>
